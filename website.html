@@ -3,91 +3,125 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CIV Bridge Group 203 Codes</title>
+  <title>Code Snippets</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
       margin: 0;
       padding: 0;
+      color: white;
+      background-color: #000; /* Fallback if particles don't load */
+    }
+
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: #000000;
     }
 
     .container {
+      position: relative;
+      z-index: 1; /* Ensures content is above particles */
       max-width: 800px;
       margin: 50px auto;
-      background: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
+      text-align: center;
+      padding: 20px;
     }
 
     h1 {
-      text-align: center;
-      background: #0078d7;
-      color: white;
+      background: #14213D;
+      color: #FFFFFF;
       margin: 0;
       padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(113, 156, 255, 0.4);
     }
 
     .tabs {
       display: flex;
-      border-bottom: 2px solid #ddd;
+      justify-content: center;
+      margin: 20px 0;
     }
 
     .tab-button {
-      flex: 1;
-      padding: 10px;
+      padding: 15px 30px;
+      margin: 0 10px;
       cursor: pointer;
       border: none;
-      background: #f4f4f4;
-      text-align: center;
+      background: #808080; /* Cream color */
+      color: #000;
       font-size: 16px;
-      color: #333;
-      transition: background-color 0.3s ease;
+      font-weight: bold;
+      border-radius: 20px;
+      box-shadow: 0px 5px 15px rgba(113, 156, 255, 0.4), 0px -2px 5px rgba(0, 0, 0, 0.3); /* Green underglow */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .tab-button:hover {
-      background: #e0e0e0;
+      transform: translateY(-3px);
+      box-shadow: 0px 7px 20px rgba(255, 255, 255, 0.6), 0px -4px 7px rgba(0, 0, 0, 0.5); /* Orange hover effect */
     }
 
     .tab-button.active {
-      background: #0078d7;
-      color: white;
+      background: linear-gradient(145deg, #14213D, #14213D); /* Dark green gradient for active state */
+      color: #FFFFFF;
     }
 
     .tab-content {
       padding: 20px;
       display: none;
+      text-align: left;
     }
 
     .tab-content.active {
       display: block;
     }
 
+    .fancy-subheading {
+      font-size: 20px;
+      font-family: "Courier";
+      color: #7393B3;
+      text-shadow: 1px 1px 2px #1537d2;
+      margin-bottom: 10px;
+    }
+
     pre {
-      background: #f0f0f0;
+      background: #121212;
       padding: 15px;
-      border-radius: 5px;
+      border-radius: 8px;
       overflow: auto;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+      color: #F5F5F5;
     }
 
     code {
       font-family: monospace;
-      color: #0e0e0e;
-      background-color: #f3f3f3;
+      color: #a3a0a0;
       font-size: 14px;
+      background-color: #121212;
+      padding: 5px;
+      border-radius: 4px;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </head>
 <body>
+  <!-- Particle Background -->
+  <div id="particles-js"></div>
+
+  <!-- Main Content -->
   <div class="container">
-    <h1>CIV Bridge Group 203 Codes</h1>
+    <h1>Code Snippets</h1>
     <div class="tabs">
-      <button class="tab-button active" onclick="switchTab('python')">Python Code For SFE and BME</button>
-      <button class="tab-button" onclick="switchTab('java')">Java Code For Cross-Section Calculations</button>
+      <button class="tab-button active" onclick="switchTab('python')">Python Code</button>
+      <button class="tab-button" onclick="switchTab('java')">Java Code</button>
     </div>
     <div id="python" class="tab-content active">
-      <h2>Python Code For SFE and BME</h2>
+      <div class="fancy-subheading">Python Code For SFE and BME</div>
       <pre><code>
 import numpy as np 
 import matplotlib.pyplot as plt 
@@ -302,7 +336,7 @@ if __name__ == "__main__":
       </code></pre>
     </div>
     <div id="java" class="tab-content">
-      <h2>Java Code For Cross-Section Calculations</h2>
+      <div class="fancy-subheading">Java Code For Cross-Section Calculations</div>
       <pre><code>
 package civ;
 abstract class Shape {
@@ -753,29 +787,42 @@ public class Main {
         // System.out.println(design.getMinB(75));
     }
 }
-
       </code></pre>
     </div>
   </div>
+
   <script>
+    // Particle Background Initialization
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: "#6495ED" }, // Brown color
+        shape: { type: "edge" },
+        opacity: { value: 0.5 },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: "#6495ED", opacity: 0.4 }, // Brown color for lines
+        move: { enable: true, speed: 2 }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: { enable: true, mode: "repulse" },
+          onclick: { enable: true, mode: "push" }
+        }
+      },
+      retina_detect: true
+    });
+
+    // Tab Switching Logic
     function switchTab(tabId) {
-      // Hide all tab contents
       document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
       });
-
-      // Remove active class from all buttons
       document.querySelectorAll('.tab-button').forEach(button => {
         button.classList.remove('active');
       });
-
-      // Show the selected tab
-      const tab = document.getElementById(tabId);
-      if (tab) tab.classList.add('active'); // Add 'active' to the selected tab
-
-      // Highlight the active button
-      const button = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
-      if (button) button.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+      document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
     }
   </script>
 </body>
