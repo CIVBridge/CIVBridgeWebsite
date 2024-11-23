@@ -304,6 +304,455 @@ if __name__ == "__main__":
     <div id="java" class="tab-content">
       <h2>Java Code For Cross-Section Calculations</h2>
       <pre><code>
+package civ;
+abstract class Shape {
+    private double length = -1.0;
+    private double height;
+    private double base;
+    private double bottomDist;
+
+    public Shape(double length, double height, double base, double bottomDist){
+        this.length = length;
+        this.height = height;
+        this.base = base;
+        this.bottomDist = bottomDist;
+    }
+
+    public Shape(double height, double base, double bottomDist){
+        this.height = height;
+        this.base = base;
+        this.bottomDist = bottomDist;
+    }
+
+
+    public double getLength() {
+        return this.length;
+    }
+
+    public double getHeight() {
+        return this.height;
+    }
+
+    public double getBase() {
+        return this.base;
+    }
+
+    public double getBotDist() {
+        return this.bottomDist;
+    }
+
+    public double getHighestPoint() {
+        return this.height + this.bottomDist;
+    }
+
+    public abstract double getArea();
+
+    public abstract double getCentroid();
+
+    public abstract double getIown();
+}
+        
+package civ;
+public class Rectangle extends Shape{
+    public Rectangle (double length, double height, double base, double botWholeToBotShape) {
+        super(length, height, base, botWholeToBotShape);
+    }
+
+    public Rectangle (double height, double base, double botWholeToBotShape) {
+        super(height, base, botWholeToBotShape);
+    }
+
+    @Override
+    public double getArea() {
+        if (getLength() >= 0) {
+            return getLength()*getBase();
+        }
+        return getHeight()*getBase();
+    }
+
+    @Override
+    public double getCentroid() {
+        return getBotDist() + getHeight()/2;
+    }
+
+    @Override
+    public double getIown() {
+        return (getBase() * Math.pow(getHeight(), 3)) / 12;
+    }
+}
+
+package civ;
+import java.util.*;
+
+public class CrossSection {
+    private static final double T_MAT = 1.27;
+    private static final double TENS_MAX_MAT = 30;
+    private static final double COMP_MAX_MAT = 6;
+    private static final double TAU_MAX_MAT = 4;
+    private static final double YOUNGS_MAT = 4000;
+    private static final double TAU_MAX_GLUE = 2;
+    private static final double POISSON = 0.2;
+    
+    
+    private ArrayList<Shape> components;
+
+    public CrossSection() {
+        this.components = new ArrayList<>(20);
+    }
+    
+    public CrossSection(ArrayList<Shape> shapes) {
+        for (Shape shape : shapes) {
+            this.components.add(shape);
+        }
+    }
+
+    public void addRect(double l, double h, double b, double botDist) {
+        this.components.add(new Rectangle(l, h, b, botDist));
+    }
+
+    public void addRect(double h, double b, double botDist) {
+        this.components.add(new Rectangle(h, b, botDist));
+    }
+
+    public double getYbar() {
+        double sumAy = 0.0;
+        double sumA = 0.0;
+        for (Shape shape : this.components) {
+            sumA += shape.getArea();
+            sumAy += shape.getArea()*shape.getCentroid();
+        }
+        return sumAy / sumA;
+    }
+
+    public double getYtop() {
+        double maxHeight = 0.0;
+        for (Shape shape : this.components) {
+            if (shape.getHighestPoint() > maxHeight) {
+                maxHeight = shape.getHighestPoint();
+            }
+        }
+        return maxHeight - getYbar();
+    }
+
+    public double getI() {
+        double sumIown = 0.0;
+        double sumIpar = 0.0;
+        for (Shape shape : this.components) {
+            sumIown += shape.getIown();
+            sumIpar += (shape.getArea() * Math.pow((shape.getCentroid() - getYbar()), 2));
+        }
+        return sumIown + sumIpar;
+    }
+
+    public double getQ(double hOfInterest) {
+        double sumAdist = 0;
+        for (Shape shape : this.components) {
+            if(shape.getBotDist() >= hOfInterest) {
+                double dist = shape.getCentroid() - getYbar();
+                sumAdist += shape.getArea()*dist;
+            } else if (shape.getHighestPoint() > hOfInterest) {
+                double A = shape.getArea() * (shape.getHighestPoint()-hOfInterest)/shape.getHeight();
+                double dist = (shape.getHighestPoint() - getYbar())/2;
+                sumAdist += A*dist;
+            }
+        }
+        return sumAdist;
+    }
+
+    public double getMinB(double hOfInterest) {
+        double sumWidths = 0;
+        double sumLowers = 0;
+        double sumHighers = 0;
+        for (Shape shape : this.components) {
+            if (shape.getBotDist() < hOfInterest && shape.getHighestPoint() > hOfInterest) {
+                sumWidths += shape.getBase();
+            } else if (shape.getBotDist() == hOfInterest) {
+                sumHighers += shape.getBase();
+            } else if (shape.getHighestPoint() == hOfInterest) {
+                sumLowers += shape.getBase();
+            }
+        }
+        double lowerB = sumLowers + sumWidths;
+        double higherB = sumHighers + sumWidths;
+        return Math.min(lowerB, higherB);
+    }
+
+    public double flex_stress(double Mmax, double y) {
+        return (Mmax*y) / getI();
+    }
+
+    public double shear_stress(double V, double hOfInterest) {
+        return (V * getQ(hOfInterest)) / (getI() * getMinB(hOfInterest));
+    }
+
+    public double flex_buck(double k, double E, double mew, double thickness, double width) {
+        return (k*(Math.PI*Math.PI)*E * Math.pow((thickness/width), 2)) / (12*Math.pow((1-mew),2));
+    }
+
+    public double shear_buck(double E, double mew, double thickness, double height, double deltaDiaph) {
+        return (5*(Math.PI*Math.PI)*E * (Math.pow((thickness/height), 2) + Math.pow((thickness/deltaDiaph), 2))) / (12*Math.pow((1-mew),2));
+    }
+
+    public double shear_buck(double E, double mew, double thickness, double height) {
+        return (5*(Math.PI*Math.PI)*E * Math.pow((thickness/height), 2)) / (12*Math.pow((1-mew),2));
+    }
+
+
+
+    public void printFOSAnalysis(double Mmax, double Vmax, ArrayList<Double> glue_heights, int case1layers, double case1width, int case2layers, double case2width, int case3layers, double case3width, int case4layers, double case4width, double distDiaph) {
+        double tens_stress = flex_stress(Mmax, getYbar());
+        double comp_stress = flex_stress(Mmax, getYtop());
+        double shear_max = shear_stress(Vmax, getYbar());
+        ArrayList<Double> glue_stresses = new ArrayList<>();
+        double maxGlueStress = shear_stress(Vmax, glue_heights.get(0));
+        for (Double h : glue_heights) {
+            double ss = shear_stress(Vmax, h);
+            glue_stresses.add(ss);
+            if (ss > maxGlueStress) {
+                maxGlueStress = ss;
+            }
+        }
+        double case1stress = flex_buck(4, YOUNGS_MAT, POISSON, T_MAT*case1layers, case1width);
+        double case2stress = flex_buck(0.425, YOUNGS_MAT, POISSON, T_MAT*case2layers, case2width);
+        double case3stress = flex_buck(6, YOUNGS_MAT, POISSON, T_MAT*case3layers, case3width);
+        double case4stress = shear_buck(YOUNGS_MAT, POISSON, T_MAT*case4layers, case4width, distDiaph);
+
+        double FOStens = TENS_MAX_MAT/tens_stress;
+        double FOScomp = COMP_MAX_MAT/comp_stress;
+        double FOSshear = TAU_MAX_MAT/shear_max;
+        double FOSglue = TAU_MAX_GLUE/maxGlueStress;
+        double FOSbuck123 = Math.min(Math.min(case1stress,case2stress), case3stress) / comp_stress;
+        double FOSshearbuck = case4stress / shear_max;
+
+        System.out.println("Applied Tens Flexural:  " + tens_stress + " MPa\nFOStens = " + FOStens + "\n");
+        System.out.println("Applied Comp Flexural:  " + comp_stress + " MPa\nFOScomp = " + FOScomp + "\n");
+        System.out.println("Applied Shear Mat:  " + shear_max + " MPa\nFOSshear = " + FOSshear + "\n");
+        System.out.print("Applied Glue Stresses:  ");
+        for (double stress : glue_stresses) {
+            System.out.print(stress + " MPa    ");
+        }
+        System.out.println("\nFOSglue = " + FOSglue + "\n");
+        System.out.println("Case 1 MAX:  " + case1stress + " MPa\nCase 2 MAX:  " + case2stress + " MPa\nCase 3 MAX:  " + case3stress + " MPa\nFOSbuck123 = " + FOSbuck123 + "\n");
+        System.out.println("Shear Buck MAX:  " + case4stress + " MPa\nFOSshearbuck = " + FOSshearbuck + "\n\n\n");
+    }
+
+
+
+    
+    public void printFullAnalysis(double Mmax, double Vmax, double Mratio, double Vratio, ArrayList<Double> glue_heights, int case1layers, double case1width, int case2layers, double case2width, int case3layers, double case3width, int case4layers, double case4width, double distDiaph) {
+        double tens_stress = flex_stress(Mmax, getYbar());
+        double comp_stress = flex_stress(Mmax, getYtop());
+        double shear_max = shear_stress(Vmax, getYbar());
+        
+        ArrayList<Double> glue_stresses = new ArrayList<>();
+        double maxGlueStress = shear_stress(Vmax, glue_heights.get(0));
+        for (Double h : glue_heights) {
+            double ss = shear_stress(Vmax, h);
+            glue_stresses.add(ss);
+            if (ss > maxGlueStress) {
+                maxGlueStress = ss;
+            }
+        }
+
+        double case1stress = flex_buck(4, YOUNGS_MAT, POISSON, T_MAT*case1layers, case1width);
+        double case2stress = flex_buck(0.425, YOUNGS_MAT, POISSON, T_MAT*case2layers, case2width);
+        double case3stress = flex_buck(6, YOUNGS_MAT, POISSON, T_MAT*case3layers, case3width);
+        double case4stress = shear_buck(YOUNGS_MAT, POISSON, T_MAT*case4layers, case4width, distDiaph);
+        ArrayList<Double> buckStresses = new ArrayList<>(Arrays.asList(case1stress, case2stress, case3stress, case4stress));
+
+        double FOStens = TENS_MAX_MAT/tens_stress;
+        double FOScomp = COMP_MAX_MAT/comp_stress;
+        double FOSshear = TAU_MAX_MAT/shear_max;
+        double FOSglue = TAU_MAX_GLUE/maxGlueStress;
+        double FOSbuck123 = Math.min(Math.min(case1stress,case2stress), case3stress) / comp_stress;
+        double FOSshearbuck = case4stress / shear_max;
+
+        System.out.println("Applied Tens Flexural:  " + tens_stress + " MPa\nFOStens = " + FOStens + "\n");
+        System.out.println("Applied Comp Flexural:  " + comp_stress + " MPa\nFOScomp = " + FOScomp + "\n");
+        System.out.println("Applied Shear Mat:  " + shear_max + " MPa\nFOSshear = " + FOSshear + "\n");
+        System.out.print("Applied Glue Stresses:  ");
+        for (double stress : glue_stresses) {
+            System.out.print(stress + " MPa    ");
+        }
+        System.out.println("\nFOSglue = " + FOSglue + "\n");
+        System.out.println("Case 1 MAX:  " + case1stress + " MPa\nCase 2 MAX:  " + case2stress + " MPa\nCase 3 MAX:  " + case3stress + " MPa\nFOSbuck123 = " + FOSbuck123 + "\n");
+        System.out.println("Shear Buck MAX:  " + case4stress + " MPa\nFOSshearbuck = " + FOSshearbuck + "\n\n\n");
+        
+        printFailurePs(Mratio, Vratio, glue_heights, buckStresses);
+    }
+
+
+
+
+    public double PfailFlex(double sigmaMax, double Mratio, double y) {
+        return (sigmaMax*getI()) / (Mratio*y);
+    }
+
+    public double PfailShear(double tauMax, double Vratio, double hOfInterest) {
+        return (tauMax*getI()*getMinB(hOfInterest)) / (Vratio*getQ(hOfInterest));
+    }
+
+
+
+
+    public void printFailurePs(double Mratio, double Vratio, ArrayList<Double> glue_heights, ArrayList<Double> buckStresses) {
+        ArrayList<Double> allPFails = new ArrayList<>();
+
+        double PflexTens = PfailFlex(TENS_MAX_MAT, Mratio, getYbar());
+        allPFails.add(PflexTens);
+        System.out.println("Pfail Flex Tens: " + PflexTens + " N");
+
+        double PflexComp = PfailFlex(COMP_MAX_MAT, Mratio, getYtop());
+        allPFails.add(PflexComp);
+        System.out.println("Pfail Flex Comp: " + PflexComp + " N");
+
+        double PshearMat = PfailShear(TAU_MAX_MAT, Vratio, getYbar());
+        allPFails.add(PshearMat);
+        System.out.println("Pfail Shear Matboard: " + PshearMat + " N");
+
+        for (Double h : glue_heights) {
+            double Pfail = PfailShear(TAU_MAX_GLUE, Vratio, h);
+            allPFails.add(Pfail);
+            System.out.println("Pfail Shear Glue: " + Pfail + " N       at height " + h + " mm");
+        }
+
+        double PbuckCase1 = PfailFlex(buckStresses.get(0), Mratio, getYtop());
+        allPFails.add(PbuckCase1);
+        System.out.println("Pfail Case 1 Buck: " + PbuckCase1 + " N");
+
+        double PbuckCase2 = PfailFlex(buckStresses.get(1), Mratio, getYtop());
+        allPFails.add(PbuckCase2);
+        System.out.println("Pfail Case 2 Buck: " + PbuckCase2 + " N");
+
+        double PbuckCase3 = PfailFlex(buckStresses.get(2), Mratio, getYtop());
+        allPFails.add(PbuckCase3);
+        System.out.println("Pfail Case 3 Buck: " + PbuckCase3 + " N");
+
+        double PbuckCase4 = PfailShear(buckStresses.get(3), Vratio, getYbar());
+        allPFails.add(PbuckCase4);
+        System.out.println("Pfail Case Shear Buck: " + PbuckCase4 + " N");
+
+        allPFails.sort(null);
+        double Pfailure = allPFails.get(0);
+        System.out.println("\n\nThe bridge will fail at P = " + Pfailure + " N");
+
+        double trainWeight = Pfailure*(1 + 1 + 1.1 + 1.1 + 1.1*1.35 + 1.1*1.35);
+        System.out.println("This is when the middle car is " + Pfailure*2 + " N and the train weighs " + trainWeight + " N");
+    }
+
+
+
+
+    public void printComponents() {
+        int i = 1;
+        for (Shape shape : this.components) {
+            System.out.print("Shape ");
+            System.out.println(i);
+            System.out.println(shape.getArea());
+            System.out.println(shape.getCentroid());
+            i++;
+        }
+    }
+    
+
+
+
+    public void printDetails() {
+        System.out.println("\n\nThe yBar value is  " + getYbar() + " mm");
+        System.out.println("Therefore yTop is " + getYtop() + " mm");
+        System.out.println("The I value is " + getI() + " mm^4\n");
+    }
+}
+
+package civ;
+import java.util.ArrayList;
+
+public class Main {
+    private static double Vmax = 257.6; 
+    private static double Mmax = 69481;
+    private static double Mratio = 1222.71;
+    private static double Vratio = 4.8356;
+
+    public static void testDesign0() {
+        CrossSection design0 = new CrossSection();
+        design0.addRect(1.27, 80, 0);
+        for (int i = 0; i < 2; i++) {
+            design0.addRect(72.46,1.27,1.27);
+            design0.addRect(1.27,6.27 , 73.73);
+        }
+        design0.addRect(1.27, 100, 75);
+        design0.printDetails();
+
+        ArrayList<Double> glueH = new ArrayList<>();
+        glueH.add(75.0);
+        design0.printFOSAnalysis(Mmax, Vmax, glueH, 1, 80, 1, 20, 1, design0.getYtop()-1.27, 1, design0.getYbar()+design0.getYtop()-2*1.27, 200);
+    }
+
+    public static void testDesignFinal() {
+        CrossSection design1 = new CrossSection();
+        ArrayList<Double> glueH = new ArrayList<>();
+
+        design1.addRect(1.27,60,0);
+        for (int i=0; i_less_2; i++) {
+            design1.addRect(75.92, 73.65, 1.27, 1.27);
+            design1.addRect(1.27,19,74.92);
+        }
+        for (int k=0; k_less_3; k++) {
+            design1.addRect(1.27,100,76.19+k*1.27);
+            glueH.add(76.19+k*1.67);
+        }
+        design1.printDetails();
+
+        design1.printFullAnalysis(Mmax, Vmax, Mratio, Vratio, glueH, 3, 100, 1, 1, 1, design1.getYtop()-3*1.27, 1, design1.getYbar()+design1.getYtop()-4*1.27, 178);
+    }
+    
+    public static void main(String[] args) {
+        testDesign0();
+        testDesignFinal();
+
+        // Scanner myobj = new Scanner(System.in);
+        // System.out.print("How many shapes in your cross section?  ");
+        // int numShapes = myobj.nextInt();
+
+        // Scanner myobj2 = new Scanner(System.in);
+        // System.out.print("Are there diagonals (y/n)?  ");
+        // String ans = myobj2.nextLine();
+
+        // CrossSection design = new CrossSection();
+        // for(int i=0; i_less_numShapes; i++) {
+        //     double l = -1.0;
+        //     System.out.print("For shape ");
+        //     System.out.println(i+1);
+        //     System.out.print("How many of these are there?  ");
+        //     int count = myobj.nextInt();
+        //     if (ans.equals("y")) {
+        //         System.out.print("Enter the actual height:  ");
+        //         l = myobj.nextDouble();
+        //     }
+        //     System.out.print("Enter the vertical height:  ");
+        //     double h = myobj.nextDouble();
+        //     System.out.print("Enter the base:  ");
+        //     double b = myobj.nextDouble();
+        //     System.out.print("How high is the bottom of the shape?  ");
+        //     double botD = myobj.nextDouble();
+        //     for (int k=0; k_less_count; k++) {
+        //         if (l >= 0) {
+        //             design.addRect(l, h, b,botD);
+        //         } else {
+        //             design.addRect(h, b, botD);
+        //         }
+        //     }
+        //     i += count-1;
+        // }
+        // design.printDetails();
+        // System.out.println(design.getQ(design.getYbar()));
+        // System.out.println(design.getQ(1.27));
+        // System.out.println(design.getQ(73.73));
+        // System.out.println(design.getQ(75));
+        // System.out.println(design.getMinB(design.getYbar()));
+        // System.out.println(design.getMinB(75));
+    }
+}
 
       </code></pre>
     </div>
