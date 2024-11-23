@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CIV Bridge Group 203 Codes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      background: #0078d7;
+      color: white;
+      margin: 0;
+      padding: 15px;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #ddd;
+    }
+
+    .tab-button {
+      flex: 1;
+      padding: 10px;
+      cursor: pointer;
+      border: none;
+      background: #f4f4f4;
+      text-align: center;
+      font-size: 16px;
+      color: #333;
+      transition: background-color 0.3s ease;
+    }
+
+    .tab-button:hover {
+      background: #e0e0e0;
+    }
+
+    .tab-button.active {
+      background: #0078d7;
+      color: white;
+    }
+
+    .tab-content {
+      padding: 20px;
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    pre {
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 5px;
+      overflow: auto;
+    }
+
+    code {
+      font-family: monospace;
+      color: #0e0e0e;
+      background-color: #f3f3f3;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CIV Bridge Group 203 Codes</h1>
+    <div class="tabs">
+      <button class="tab-button active" onclick="switchTab('python')">Python Code For SFE and BME</button>
+      <button class="tab-button" onclick="switchTab('java')">Java Code For Cross-Section Calculations</button>
+    </div>
+    <div id="python" class="tab-content active">
+      <h2>Python Code For SFE and BME</h2>
+      <pre><code>
+import numpy as np 
+import matplotlib.pyplot as plt 
+#python libraries to graph SFD and BMD
+
+class Load:
+    @staticmethod
+    def change(f, d):
+        return f, d
+
+def calculate(x,n):
+    load_data1 = [
+        (200/3, -855), (200/3, -679), (200/3, -515), (200/3, -339),
+        (200/3, -175), (200/3, 0)
+    ]
+    #case 1
+
+    load_data2 = [
+        (67.45, -855), (67.45, -679), (67.45, -515), (67.45, -339),
+        (91.05, -175), (91.05, 0)
+    ]
+    #case 2
+
+    load_data3 = [
+        (1.1, -855), (1.1, -679), (1, -515), (1, -339),
+        (1.485, -175), (1.485, 0)
+    ]
+    #case 3 (P)
+
+    types = [load_data1, load_data2, load_data3]
+    forceList, distanceList = zip(*(Load.change(f, d) for f, d in types[x]))
+    distanceList = list(distanceList)
+    forceList = list(forceList)
+    #create to forceList and distanceList
+
+    FYList = []
+    rollerList = []
+    pinList = []
+    big_shear_force = []
+    max_shear_force = []
+    for i in range(1251):
+        max_shear_force.append([])
+    final_shear_force = []
+    max_bending_moment = []
+    for i in range(1251):
+        max_bending_moment.append([])
+    final_bending_moment = []
+    big_bending_moment = []
+    max_point_on_train_shear = []
+    max_point_on_train_moment = []
+    sheartest = []
+    momenttest = []
+    global individual
+    individual = 0
+    #initializing variables
+
+    for _ in range(2106):
+        FY = 0
+        Moment = 0
+        relevantForcesList = []
+        relevantDistancesList = []
+        newsortedForceList = []
+        key = 0
+        sum = 0
+        filledForcesList = []
+        current_force_index = 0
+        #initilizing iteration reset variables
+
+        for j, (force, distance) in enumerate(zip(forceList, distanceList)):
+            if 0 <= distanceList[j] <= 1250:
+                FY += force #cumulate Force in Y-direction
+                relevantForcesList.append(-1*force) #cumulate Forces on beam
+                relevantDistancesList.append(distanceList[j]) #cumulate Forces on beam
+                Moment += (distanceList[j] - 25) * force #cumulate Moments
+            distanceList[j] += 1 #add train movement by 1mm on the beam
+
+        roller_force = Moment / 1200 #calculate roller force
+        pin_force = FY - roller_force #calculate pin force
+
+        FYList.append(FY) 
+        rollerList.append(roller_force)
+        pinList.append(pin_force)
+        #append to respective lists
+
+        relevantForcesList = [0, pin_force] + relevantForcesList + [roller_force, 0]
+        relevantDistancesList = [0, 25] + relevantDistancesList + [1225, 1250]
+        #add edge bounds to both distance and force lists
+
+        paired_lists = list(zip(relevantDistancesList, relevantForcesList))
+        paired_lists.sort(key=lambda x: x[0])
+        sortedDistancesList, sortedForcesList = zip(*paired_lists)
+        sortedDistancesList = list(sortedDistancesList)
+        sortedForcesList = list(sortedForcesList)
+        #sort both lists
+
+        for i in range(len(sortedForcesList)):
+            sum += sortedForcesList[i]
+            newsortedForceList.append(sum)
+
+        ''' Fill in distance and force lists to include all points on the beam, creating horizontal 
+        lines between distances and force value-drops'''
+        min_distance = sortedDistancesList[0]
+        max_distance = sortedDistancesList[-1]
+
+        step_size = 1
+        filledDistancesList = list(range(min_distance, max_distance + 1, step_size))
+
+        for distance in filledDistancesList:
+            if (current_force_index < len(sortedDistancesList) and 
+                    distance > sortedDistancesList[current_force_index + 1]):
+                current_force_index += 1
+            filledForcesList.append(newsortedForceList[current_force_index])
+        big_shear_force.append(filledForcesList)
+        big_bending_moment.append(np.cumsum(filledForcesList))
+
+        if (_ == n):
+            sheartest = filledForcesList
+            momenttest = list(np.cumsum(filledForcesList))
+
+    '''convert the data in terms of position of the train movement to position of the beam 
+    length (inverse the matrix of 2106x1251 to 1251x2106)'''
+    for i in range(len(big_shear_force)):
+        for j in range(len(big_shear_force[i])):
+            max_shear_force[j].append(big_shear_force[i][j])
+
+    for i in range(len(big_bending_moment)):
+        for k in range(len(big_bending_moment[i])):
+            max_bending_moment[k].append(big_bending_moment[i][k])
+
+    for i in range(len(max_shear_force)):
+        final_shear_force.append(max(abs(number) for number in max_shear_force[i]))
+        final_bending_moment.append(max(number for number in max_bending_moment[i]))
+        max_point_on_train_shear.append(max(range(len(max_shear_force[i])), key=lambda x: abs(max_shear_force[i][x])))
+        #max_point_on_train_shear.append(max(range(len(max_shear_force[i])), key=max_shear_force[i].__getitem__))
+        max_point_on_train_moment.append(max(range(len(max_bending_moment[i])), key=max_bending_moment[i].__getitem__))
+
+    #fix end bounds
+    final_shear_force.append (0)
+    sheartest.append(0)
+    momenttest.append(0)
+    final_bending_moment.append(0)
+    filledDistancesList.append(filledDistancesList[-1]+1)
+    return [filledDistancesList, final_shear_force, final_bending_moment, sheartest, momenttest, max_point_on_train_shear, max_point_on_train_moment]
+
+def plot(type, n):
+    global individual
+    if (individual != 1):
+        data = calculate(type,0)
+        x,y,z,max_point_on_train_shear,max_point_on_train_bending = data[0], data[1], data[2], data[5], data[6]
+    else:
+        data = calculate(type,n)
+        x,y,z,max_point_on_train_shear,max_point_on_train_bending = data[0], data[3], data[4], data[5], data[6]
+
+
+    '''PLOT'''
+    #print maximum of shear and moment out of the entire maximum plots to console
+    print((f"Total Max Shear (N) is: {max(y)}, Slide Rule: {int(float(f'{max(y):.3g}'))}") if (str(int(max(y)))[0] != "1")
+        else (f"Total Max Shear (N) is: {max(y)}, Slide Rule: {int(float(f'{max(y):.4g}'))}"))
+    print((f"Total Max Moment (N*mm) is: {max(z)}, Slide Rule: {int(float(f'{max(z):.3g}'))}") if (str(int(max(z)))[0] != "1")
+        else (f"Total Max Moment (N*mm) is: {max(z)}, Slide Rule: {int(float(f'{max(z):.4g}'))}"))
+
+    print("-"*80)
+
+    #Print to confirm with calculations by hand
+    print(f"This Max Shear (N) occured at: {x[y.index(max(y))]-1}mm, Front Wheel of Train has moved: {max_point_on_train_shear[y.index(max(y))]}mm.")
+    print(f"This Max Moment (N*mm) occured at: {x[z.index(max(z))]-1}mm, Front Wheel of Train has moved: {max_point_on_train_bending[z.index(max(z))]}mm.")
+
+
+    fig = plt.figure()
+
+    shear = fig.add_subplot(121)
+    shear.plot(x,y, color='blue')
+    shear.set_title('Shear Force Envelope')
+    shear.set_xlabel('Position on Beam (mm)')
+    shear.set_ylabel('Shear Force (N)')
+    original_number = max(y, key=abs)
+    plt.plot(x[y.index(original_number)], original_number, ms=5, marker='o', color='green')  # Added color for visibility
+    plt.text(
+        x[y.index(original_number)] - 5,  
+        original_number + 5,              
+        f"{x[y.index(original_number)]-1, int(float(f'{original_number:.3g}'))}", 
+        ha="right",                       
+        va="bottom"                       
+    )
+
+
+    moment = fig.add_subplot(122)
+    moment.plot(x,z, color='red')
+    moment.set_title('Bending Moment Envelope')
+    moment.set_xlabel('Position on Beam (mm)')
+    moment.set_ylabel('Bending Moment (N*mm)')
+    plt.plot(x[z.index(max(z))],max(z),ms = 5, marker='o', color='green')
+    plt.text(
+    x[z.index(max(z))] - 5,    
+    max(z) + 5,               
+    f"{x[z.index(max(z))]-1, int(float(f'{max(z):.3g}'))}"  ,
+    ha="right",                       
+    va="bottom"                
+)
+
+    plt.show()
+
+def individualplot(type, n):
+    global individual
+    individual = 1
+    plot(type,n)
+
+if __name__ == "__main__":
+    individual = 0
+    #plot(1,0)
+    individualplot(1, 1225)
+      </code></pre>
+    </div>
+    <div id="java" class="tab-content">
+      <h2>Java Code For Cross-Section Calculations</h2>
+      <pre><code>
+
+      </code></pre>
+    </div>
+  </div>
+  <script>
+    function switchTab(tabId) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+
+      // Remove active class from all buttons
+      document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+      });
+
+      // Show the selected tab
+      const tab = document.getElementById(tabId);
+      if (tab) tab.classList.add('active'); // Add 'active' to the selected tab
+
+      // Highlight the active button
+      const button = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
+      if (button) button.classList.add('active');
+    }
+  </script>
+</body>
+</html>
