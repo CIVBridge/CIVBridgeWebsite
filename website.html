@@ -1047,13 +1047,13 @@ public class Main {
 
     img.onload = function () {
       // Create multiple bouncing objects
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 7; i++) {
         balls.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           dx: Math.random() * 2 + 1,
           dy: Math.random() * 2 + 1,
-          size: 50,
+          size: 100,
           image: img,
         });
       }
