@@ -3,29 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CIV Group 203 Codes</title>
+  <title>Code Snippets</title>
   <style>
     body {
       font-family: Courier, sans-serif;
       margin: 0;
       padding: 0;
       color: white;
-      background-color: #000; /* Fallback if particles don't load */
+      background-color: #000;
     }
 
-    #particles-js {
+    canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       z-index: -1;
-      background: #000000;
     }
 
     .container {
       position: relative;
-      z-index: 1; /* Ensures content is above particles */
+      z-index: 1;
       max-width: 800px;
       margin: 50px auto;
       text-align: center;
@@ -52,23 +51,23 @@
       margin: 0 10px;
       cursor: pointer;
       border: none;
-      background: #808080; /* Cream color */
+      background: #808080;
       color: #000;
       font-size: 16px;
       font-weight: bold;
       font-family: "Courier";
       border-radius: 20px;
-      box-shadow: 0px 5px 15px rgba(113, 156, 255, 0.4), 0px -2px 5px rgba(0, 0, 0, 0.3); /* Green underglow */
+      box-shadow: 0px 5px 15px rgba(113, 156, 255, 0.4), 0px -2px 5px rgba(0, 0, 0, 0.3);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .tab-button:hover {
       transform: translateY(-3px);
-      box-shadow: 0px 7px 20px rgba(255, 255, 255, 0.6), 0px -4px 7px rgba(0, 0, 0, 0.5); /* Orange hover effect */
+      box-shadow: 0px 7px 20px rgba(255, 255, 255, 0.6), 0px -4px 7px rgba(0, 0, 0, 0.5);
     }
 
     .tab-button.active {
-      background: linear-gradient(145deg, #14213D, #14213D); /* Dark green gradient for active state */
+      background: linear-gradient(145deg, #14213D, #14213D);
       color: #FFFFFF;
     }
 
@@ -103,21 +102,18 @@
       font-family: Courier;
       color: #a3a0a0;
       font-size: 14px;
-      line-height:1.8;
+      line-height: 1.8;
       background-color: #121212;
       padding: 5px;
       border-radius: 4px;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </head>
 <body>
-  <!-- Particle Background -->
-  <div id="particles-js"></div>
+  <canvas id="bouncingCanvas"></canvas>
 
-  <!-- Main Content -->
   <div class="container">
-    <h1>CIV Group 203 Codes</h1>
+    <h1>Code Snippets</h1>
     <div class="tabs">
       <button class="tab-button active" onclick="switchTab('python')">Python Code</button>
       <button class="tab-button" onclick="switchTab('java')">Java Code</button>
@@ -148,8 +144,8 @@ def calculate(x,n):
     #case 2
 
     load_data3 = [
-        (1.1, -855), (1.1, -679), (1, -515), (1, -339),
-        (1.485, -175), (1.485, 0)
+        (1.1*138.66, -855), (1.1*138.66, -679), (1*138.66, -515), (1*138.66, -339),
+        (1.485*138.66, -175), (1.485*138.66, 0)
     ]
     #case 3 (P)
 
@@ -286,7 +282,8 @@ def plot(type, n):
         else (f"Total Max Moment (N*mm) is: {max(z)}, Slide Rule: {int(float(f'{max(z):.4g}'))}"))
 
     print("-"*80)
-
+    print(z[437])
+    print(z[813])
     #Print to confirm with calculations by hand
     print(f"This Max Shear (N) occured at: {x[y.index(max(y))]-1}mm, Front Wheel of Train has moved: {max_point_on_train_shear[y.index(max(y))]}mm.")
     print(f"This Max Moment (N*mm) occured at: {x[z.index(max(z))]-1}mm, Front Wheel of Train has moved: {max_point_on_train_bending[z.index(max(z))]}mm.")
@@ -333,8 +330,8 @@ def individualplot(type, n):
 
 if __name__ == "__main__":
     individual = 0
-    #plot(1,0)
-    individualplot(1, 1225)
+    plot(0,0)
+    #individualplot(1, 1225)
       </code></pre>
     </div>
     <div id="java" class="tab-content">
@@ -387,7 +384,7 @@ abstract class Shape {
 
     public abstract double getIown();
 }
-        
+
 package civ;
 public class Rectangle extends Shape{
     public Rectangle (double length, double height, double base, double botWholeToBotShape) {
@@ -712,7 +709,7 @@ public class Main {
     public static void testDesign0() {
         CrossSection design0 = new CrossSection();
         design0.addRect(1.27, 80, 0);
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i _less_ 2; i++) {
             design0.addRect(72.46,1.27,1.27);
             design0.addRect(1.27,6.27 , 73.73);
         }
@@ -729,7 +726,7 @@ public class Main {
         ArrayList<Double> glueH = new ArrayList<>();
 
         design1.addRect(1.27,60,0);
-        for (int i=0; i_less_2; i++) {
+        for (int i=0; i<2; i++) {
             design1.addRect(75.92, 73.65, 1.27, 1.27);
             design1.addRect(1.27,19,74.92);
         }
@@ -755,7 +752,7 @@ public class Main {
         // String ans = myobj2.nextLine();
 
         // CrossSection design = new CrossSection();
-        // for(int i=0; i_less_numShapes; i++) {
+        // for(int i=0; i<numShapes; i++) {
         //     double l = -1.0;
         //     System.out.print("For shape ");
         //     System.out.println(i+1);
@@ -771,7 +768,7 @@ public class Main {
         //     double b = myobj.nextDouble();
         //     System.out.print("How high is the bottom of the shape?  ");
         //     double botD = myobj.nextDouble();
-        //     for (int k=0; k_less_count; k++) {
+        //     for (int k=0; k<count; k++) {
         //         if (l >= 0) {
         //             design.addRect(l, h, b,botD);
         //         } else {
@@ -789,38 +786,56 @@ public class Main {
         // System.out.println(design.getMinB(75));
     }
 }
+
+        
       </code></pre>
     </div>
   </div>
 
   <script>
-    // Particle Background Initialization
-    particlesJS("particles-js", {
-      particles: {
-        number: { value: 80, density: { enable: true, value_area: 800 } },
-        color: { value: "#6495ED" }, // Brown color
-        shape: { type: "edge" },
-        opacity: { value: 0.5 },
-        size: { value: 3, random: true },
-        line_linked: { enable: true, distance: 150, color: "#6495ED", opacity: 0.4 }, // Brown color for lines
-        move: { enable: true, speed: 2 }
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: {
-          onhover: { enable: true, mode: "repulse" },
-          onclick: { enable: true, mode: "push" }
-        }
-      },
-      retina_detect: true
-    });
+    const canvas = document.getElementById('bouncingCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    // Tab Switching Logic
+    const balls = [];
+    const img = new Image();
+    img.src = 'amongus.png'; // Replace with the path to your image
+
+    img.onload = function () {
+      // Create multiple bouncing objects
+      for (let i = 0; i < 10; i++) {
+        balls.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          dx: Math.random() * 2 + 1,
+          dy: Math.random() * 2 + 1,
+          size: 50,
+          image: img,
+        });
+      }
+      draw();
+    };
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      balls.forEach((ball) => {
+        ctx.drawImage(ball.image, ball.x, ball.y, ball.size, ball.size);
+        ball.x += ball.dx;
+        ball.y += ball.dy;
+
+        // Bounce off walls
+        if (ball.x < 0 || ball.x + ball.size > canvas.width) ball.dx *= -1;
+        if (ball.y < 0 || ball.y + ball.size > canvas.height) ball.dy *= -1;
+      });
+      requestAnimationFrame(draw);
+    }
+
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(tab => {
+      document.querySelectorAll('.tab-content').forEach((tab) => {
         tab.classList.remove('active');
       });
-      document.querySelectorAll('.tab-button').forEach(button => {
+      document.querySelectorAll('.tab-button').forEach((button) => {
         button.classList.remove('active');
       });
       document.getElementById(tabId).classList.add('active');
