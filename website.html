@@ -337,13 +337,16 @@ if __name__ == "__main__":
     <div id="java" class="tab-content">
       <div class="fancy-subheading">Java Code For Cross-Section Calculations</div>
       <pre><code>
-package civ;
 abstract class Shape {
+    // ****** This class allows for any shape to be added to a cross section, 
+    //        but we ended up using only rectangles
+    // ******
     private double length = -1.0;
     private double height;
     private double base;
     private double bottomDist;
 
+    // Constructor for diagonal shapes
     public Shape(double length, double height, double base, double bottomDist){
         this.length = length;
         this.height = height;
@@ -351,6 +354,7 @@ abstract class Shape {
         this.bottomDist = bottomDist;
     }
 
+    //Constructor for vertical or horizontal shapes
     public Shape(double height, double base, double bottomDist){
         this.height = height;
         this.base = base;
@@ -371,10 +375,14 @@ abstract class Shape {
     }
 
     public double getBotDist() {
+        // ****** This function returns the distance between the bottom of the shape and the bottom of the cross section
+        // ******
         return this.bottomDist;
     }
 
     public double getHighestPoint() {
+        // ****** This function returns the highest point of the shape relative to the bottom of the cross section
+        // ******
         return this.height + this.bottomDist;
     }
 
@@ -385,9 +393,12 @@ abstract class Shape {
     public abstract double getIown();
 }
 
-package civ;
 public class Rectangle extends Shape{
     public Rectangle (double length, double height, double base, double botWholeToBotShape) {
+        // ****** This constructor is used for rectangles at a diagonal
+        //        length and base represent the actual dimensions of the rectangle
+        //        height represents the vertical height of the diagonal rectangle perpendicular to the centroid of the cross section
+        // ******
         super(length, height, base, botWholeToBotShape);
     }
 
@@ -397,6 +408,8 @@ public class Rectangle extends Shape{
 
     @Override
     public double getArea() {
+        // ****** This function returns the area of a rectangle
+        // ******
         if (getLength() >= 0) {
             return getLength()*getBase();
         }
@@ -405,59 +418,67 @@ public class Rectangle extends Shape{
 
     @Override
     public double getCentroid() {
+        // ****** This function returns the centroid of a rectangle relative to the bottom of the cross section
+        // ******
         return getBotDist() + getHeight()/2;
     }
 
     @Override
     public double getIown() {
+        // ****** This function returns the Iown of a rectangle
+        // ******
         return (getBase() * Math.pow(getHeight(), 3)) / 12;
     }
 }
 
-package civ;
 import java.util.*;
 
 public class CrossSection {
-    private static final double T_MAT = 1.27;
+    // These values were taken from "CIV102 Matboard Bridge Design Project" (2024)
+    private static final double THICK_MAT = 1.27;
     private static final double TENS_MAX_MAT = 30;
     private static final double COMP_MAX_MAT = 6;
     private static final double TAU_MAX_MAT = 4;
     private static final double YOUNGS_MAT = 4000;
     private static final double TAU_MAX_GLUE = 2;
     private static final double POISSON = 0.2;
-    
-    
+
+    // This is the collection of shapes that make up the cross section
     private ArrayList<Shape> components;
 
+    // Constructor
     public CrossSection() {
         this.components = new ArrayList<>(20);
     }
-    
-    public CrossSection(ArrayList<Shape> shapes) {
-        for (Shape shape : shapes) {
-            this.components.add(shape);
-        }
-    }
 
     public void addRect(double l, double h, double b, double botDist) {
+        // ****** This function adds a diagonal rectangle to the cross section
+        // ******
         this.components.add(new Rectangle(l, h, b, botDist));
     }
 
     public void addRect(double h, double b, double botDist) {
+        // ****** This function adds a vertical or horizontal rectangle to the cross section
+        // ******
         this.components.add(new Rectangle(h, b, botDist));
     }
 
     public double getYbar() {
+        // ****** This function calculates the yBar for the cross section
+        //        This also serves as the distance from the bottom to the centroid of the cross section (yBot)
+        // ******
         double sumAy = 0.0;
         double sumA = 0.0;
         for (Shape shape : this.components) {
             sumA += shape.getArea();
-            sumAy += shape.getArea()*shape.getCentroid();
+            sumAy += shape.getArea() * shape.getCentroid();
         }
         return sumAy / sumA;
     }
 
     public double getYtop() {
+        // ****** This function calculates the distance from the top to the centroid of the cross section (yTop)
+        // ******
         double maxHeight = 0.0;
         for (Shape shape : this.components) {
             if (shape.getHighestPoint() > maxHeight) {
@@ -468,6 +489,8 @@ public class CrossSection {
     }
 
     public double getI() {
+        // ****** This function calculates the second moment of area I for the cross section
+        // ******
         double sumIown = 0.0;
         double sumIpar = 0.0;
         for (Shape shape : this.components) {
@@ -478,21 +501,26 @@ public class CrossSection {
     }
 
     public double getQ(double hOfInterest) {
+        // ****** This function calculates the first moment of area Q at a given height of the cross section (hOfInterest)
+        //        It always uses the top of the cross section as the stress-free surface
+        // ******
         double sumAdist = 0;
         for (Shape shape : this.components) {
-            if(shape.getBotDist() >= hOfInterest) {
+            if (shape.getBotDist() >= hOfInterest) {
                 double dist = shape.getCentroid() - getYbar();
-                sumAdist += shape.getArea()*dist;
+                sumAdist += shape.getArea() * dist;
             } else if (shape.getHighestPoint() > hOfInterest) {
-                double A = shape.getArea() * (shape.getHighestPoint()-hOfInterest)/shape.getHeight();
-                double dist = (shape.getHighestPoint() - getYbar())/2;
-                sumAdist += A*dist;
+                double A = shape.getArea() * (shape.getHighestPoint() - hOfInterest) / shape.getHeight();
+                double dist = (shape.getHighestPoint() - getYbar()) / 2;
+                sumAdist += A * dist;
             }
         }
         return sumAdist;
     }
 
     public double getMinB(double hOfInterest) {
+        // ****** This function calculates the smallest horizontal width b at given height of the cross section (hOfInterest)
+        // ******
         double sumWidths = 0;
         double sumLowers = 0;
         double sumHighers = 0;
@@ -507,97 +535,82 @@ public class CrossSection {
         }
         double lowerB = sumLowers + sumWidths;
         double higherB = sumHighers + sumWidths;
+        if (lowerB == 0) {
+            return higherB;
+        } else if (higherB == 0) {
+            return lowerB;
+        }
         return Math.min(lowerB, higherB);
     }
 
     public double flex_stress(double Mmax, double y) {
-        return (Mmax*y) / getI();
+        // ****** This function calculates flexural stress for a given moment (Mmax) and distance from centroid (y)
+        // ******
+        return (Mmax * y) / getI();
     }
 
     public double shear_stress(double V, double hOfInterest) {
+        // ****** This function calculates shear stress for a given shear force (V) at a given height axis (hOfInterest)
+        // ******
         return (V * getQ(hOfInterest)) / (getI() * getMinB(hOfInterest));
     }
 
-    public double flex_buck(double k, double E, double mew, double thickness, double width) {
-        return (k*(Math.PI*Math.PI)*E * Math.pow((thickness/width), 2)) / (12*Math.pow((1-mew),2));
+    public double shear_glue(double V, double hOfInterest, double glueWidth) {
+        // ****** This function calculates the shear stress experienced by glue for a given shear force (V) at a given height (hOfInterest)
+        //        for a given width of glue applied (glueWidth)
+        // ******
+        return (V * getQ(hOfInterest)) / (getI() * glueWidth);
     }
 
-    public double shear_buck(double E, double mew, double thickness, double height, double deltaDiaph) {
-        return (5*(Math.PI*Math.PI)*E * (Math.pow((thickness/height), 2) + Math.pow((thickness/deltaDiaph), 2))) / (12*Math.pow((1-mew),2));
+    public double flex_buck(double k, double E, double mew, double t, double w) {
+        // ****** This function calculates local buckling stress on a member for a given constant k (k), Young's modulus (E),
+        //        Poisson's ratio (mew), member thickness (t), and member width (w)
+        // ******
+        return (k * (Math.PI * Math.PI) * E * Math.pow((t / w), 2)) / (12 * (1 - mew * mew));
     }
 
-    public double shear_buck(double E, double mew, double thickness, double height) {
-        return (5*(Math.PI*Math.PI)*E * Math.pow((thickness/height), 2)) / (12*Math.pow((1-mew),2));
+    public double shear_buck(double E, double mew, double t, double h, double deltaDiaph) {
+        // ****** This function calculates shear buckling stress on the web for a given constant k (k), Young's modulus (E),
+        //        Poisson's ratio (mew), web thickness (t), and diaphragm distance (deltaDiaph)
+        // ******
+        return (5 * (Math.PI * Math.PI) * E
+                * (Math.pow((t / h), 2) + Math.pow((t / deltaDiaph), 2)))
+                / (12 * (1 - mew * mew));
     }
-
-
-
-    public void printFOSAnalysis(double Mmax, double Vmax, ArrayList<Double> glue_heights, int case1layers, double case1width, int case2layers, double case2width, int case3layers, double case3width, int case4layers, double case4width, double distDiaph) {
-        double tens_stress = flex_stress(Mmax, getYbar());
-        double comp_stress = flex_stress(Mmax, getYtop());
-        double shear_max = shear_stress(Vmax, getYbar());
-        ArrayList<Double> glue_stresses = new ArrayList<>();
-        double maxGlueStress = shear_stress(Vmax, glue_heights.get(0));
-        for (Double h : glue_heights) {
-            double ss = shear_stress(Vmax, h);
-            glue_stresses.add(ss);
-            if (ss > maxGlueStress) {
-                maxGlueStress = ss;
-            }
-        }
-        double case1stress = flex_buck(4, YOUNGS_MAT, POISSON, T_MAT*case1layers, case1width);
-        double case2stress = flex_buck(0.425, YOUNGS_MAT, POISSON, T_MAT*case2layers, case2width);
-        double case3stress = flex_buck(6, YOUNGS_MAT, POISSON, T_MAT*case3layers, case3width);
-        double case4stress = shear_buck(YOUNGS_MAT, POISSON, T_MAT*case4layers, case4width, distDiaph);
-
-        double FOStens = TENS_MAX_MAT/tens_stress;
-        double FOScomp = COMP_MAX_MAT/comp_stress;
-        double FOSshear = TAU_MAX_MAT/shear_max;
-        double FOSglue = TAU_MAX_GLUE/maxGlueStress;
-        double FOSbuck123 = Math.min(Math.min(case1stress,case2stress), case3stress) / comp_stress;
-        double FOSshearbuck = case4stress / shear_max;
-
-        System.out.println("Applied Tens Flexural:  " + tens_stress + " MPa\nFOStens = " + FOStens + "\n");
-        System.out.println("Applied Comp Flexural:  " + comp_stress + " MPa\nFOScomp = " + FOScomp + "\n");
-        System.out.println("Applied Shear Mat:  " + shear_max + " MPa\nFOSshear = " + FOSshear + "\n");
-        System.out.print("Applied Glue Stresses:  ");
-        for (double stress : glue_stresses) {
-            System.out.print(stress + " MPa    ");
-        }
-        System.out.println("\nFOSglue = " + FOSglue + "\n");
-        System.out.println("Case 1 MAX:  " + case1stress + " MPa\nCase 2 MAX:  " + case2stress + " MPa\nCase 3 MAX:  " + case3stress + " MPa\nFOSbuck123 = " + FOSbuck123 + "\n");
-        System.out.println("Shear Buck MAX:  " + case4stress + " MPa\nFOSshearbuck = " + FOSshearbuck + "\n\n\n");
-    }
-
-
 
     
-    public void printFullAnalysis(double Mmax, double Vmax, double Mratio, double Vratio, ArrayList<Double> glue_heights, int case1layers, double case1width, int case2layers, double case2width, int case3layers, double case3width, int case4layers, double case4width, double distDiaph) {
+
+    public void printFOSAnalysis(double Mmax, double Vmax, ArrayList<Double> glueHeights,
+            ArrayList<Integer> buckCaseLayers, ArrayList<Double> buckCaseWidths, double distDiaph) {
+        // ****** This function calculates the flexural stresses, shear stresses, and local buckling stresses on a cross section
+        //        for a given max applied moment (Mmax) and shear force (Vmax)
+        //        It calculates the shear stress experienced by glue at all heights where glue is applied (glueHeights)
+        //        It requires given lists of thickness (buckCaseLayers) and width (buckCaseWidths) values for local buckling cases
+        //        For Case 4 buckling, it requires a given diaphragm distance
+        //        The function then calculates all the factors of safety (FOS) for each failure method
+        // ******
         double tens_stress = flex_stress(Mmax, getYbar());
         double comp_stress = flex_stress(Mmax, getYtop());
         double shear_max = shear_stress(Vmax, getYbar());
-        
         ArrayList<Double> glue_stresses = new ArrayList<>();
-        double maxGlueStress = shear_stress(Vmax, glue_heights.get(0));
-        for (Double h : glue_heights) {
+        double maxGlueStress = shear_stress(Vmax, glueHeights.get(0));
+        for (Double h : glueHeights) {
             double ss = shear_stress(Vmax, h);
             glue_stresses.add(ss);
             if (ss > maxGlueStress) {
                 maxGlueStress = ss;
             }
         }
+        double case1stress = flex_buck(4, YOUNGS_MAT, POISSON, THICK_MAT * buckCaseLayers.get(0), buckCaseWidths.get(0));
+        double case2stress = flex_buck(0.425, YOUNGS_MAT, POISSON, THICK_MAT * buckCaseLayers.get(1), buckCaseWidths.get(1));
+        double case3stress = flex_buck(6, YOUNGS_MAT, POISSON, THICK_MAT * buckCaseLayers.get(2), buckCaseWidths.get(2));
+        double case4stress = shear_buck(YOUNGS_MAT, POISSON, THICK_MAT * buckCaseLayers.get(3), buckCaseWidths.get(3), distDiaph);
 
-        double case1stress = flex_buck(4, YOUNGS_MAT, POISSON, T_MAT*case1layers, case1width);
-        double case2stress = flex_buck(0.425, YOUNGS_MAT, POISSON, T_MAT*case2layers, case2width);
-        double case3stress = flex_buck(6, YOUNGS_MAT, POISSON, T_MAT*case3layers, case3width);
-        double case4stress = shear_buck(YOUNGS_MAT, POISSON, T_MAT*case4layers, case4width, distDiaph);
-        ArrayList<Double> buckStresses = new ArrayList<>(Arrays.asList(case1stress, case2stress, case3stress, case4stress));
-
-        double FOStens = TENS_MAX_MAT/tens_stress;
-        double FOScomp = COMP_MAX_MAT/comp_stress;
-        double FOSshear = TAU_MAX_MAT/shear_max;
-        double FOSglue = TAU_MAX_GLUE/maxGlueStress;
-        double FOSbuck123 = Math.min(Math.min(case1stress,case2stress), case3stress) / comp_stress;
+        double FOStens = TENS_MAX_MAT / tens_stress;
+        double FOScomp = COMP_MAX_MAT / comp_stress;
+        double FOSshear = TAU_MAX_MAT / shear_max;
+        double FOSglue = TAU_MAX_GLUE / maxGlueStress;
+        double FOSbuck123 = Math.min(Math.min(case1stress, case2stress), case3stress) / comp_stress;
         double FOSshearbuck = case4stress / shear_max;
 
         System.out.println("Applied Tens Flexural:  " + tens_stress + " MPa\nFOStens = " + FOStens + "\n");
@@ -608,27 +621,107 @@ public class CrossSection {
             System.out.print(stress + " MPa    ");
         }
         System.out.println("\nFOSglue = " + FOSglue + "\n");
-        System.out.println("Case 1 MAX:  " + case1stress + " MPa\nCase 2 MAX:  " + case2stress + " MPa\nCase 3 MAX:  " + case3stress + " MPa\nFOSbuck123 = " + FOSbuck123 + "\n");
-        System.out.println("Shear Buck MAX:  " + case4stress + " MPa\nFOSshearbuck = " + FOSshearbuck + "\n\n\n");
-        
-        printFailurePs(Mratio, Vratio, glue_heights, buckStresses);
+        System.out.println("Case 1 MAX:  " + case1stress + " MPa\nCase 2 MAX:  " + case2stress + " MPa\nCase 3 MAX:  "
+                            + case3stress + " MPa\nFOSbuck123 = " + FOSbuck123 + "\n");
+        System.out.println("Shear Buck MAX:  " + case4stress + " MPa\nFOSshearbuck = " + FOSshearbuck + "\n\n");
+        System.out.println("FOStens = " + FOStens + "\nFOScomp = " + FOScomp + "\nFOSshear = " + FOSshear + "\nFOSglue = "
+                            + FOSglue + "\nFOSbuck123 = " + FOSbuck123 + "\nFOSshearbuck = " + FOSshearbuck + "\n\n");
     }
+
+
+
+
+    public void printFullAnalysis(double Mmax, double Vmax, double Mratio, double Vratio,
+            ArrayList<Double> glueHeights, double glueWidth,
+            ArrayList<Integer> buckCaseLayers, ArrayList<Double> buckCaseWidths, double distDiaph) {
+        // ****** This function calculates the flexural stresses, shear stresses, and local buckling stresses on a cross section
+        //        for a given max applied moment (Mmax) and shear force (Vmax)
+        //        It calculates the shear stress experienced by glue at all heights where glue is applied (glueHeights) for a given width of glue applied (glueWidth)
+        //        It requires given lists of thickness (buckCaseLayers) and width (buckCaseWidths) values for local buckling cases
+        //        For Case 4 buckling, it requires a given diaphragm distance
+        //        Next, the function calculates all the factors of safety (FOS) for each failure method
+        //        Finally, the function calculates the failure load P and the maximum weight of the train that will cause the cross section to fail
+        // ******
+        double tens_stress = flex_stress(Mmax, getYbar());
+        double comp_stress = flex_stress(Mmax, getYtop());
+        double shear_max = shear_stress(Vmax, getYbar());
+        ArrayList<Double> glue_stresses = new ArrayList<>();
+        double maxGlueStress = shear_glue(Vmax, glueHeights.get(0), glueWidth);
+        for (Double h : glueHeights) {
+            double ss = shear_glue(Vmax, h, glueWidth);
+            glue_stresses.add(ss);
+            if (ss > maxGlueStress) {
+                maxGlueStress = ss;
+            }
+        }
+        double case1stress = flex_buck(4, YOUNGS_MAT, POISSON, THICK_MAT * buckCaseLayers.get(0), buckCaseWidths.get(0));
+        double case2stress = flex_buck(0.425, YOUNGS_MAT, POISSON, THICK_MAT * buckCaseLayers.get(1), buckCaseWidths.get(1));
+        double case3stress = flex_buck(6, YOUNGS_MAT, POISSON, THICK_MAT * buckCaseLayers.get(2), buckCaseWidths.get(2));
+        double case4stress = shear_buck(YOUNGS_MAT, POISSON, THICK_MAT * buckCaseLayers.get(3), buckCaseWidths.get(3), distDiaph);
+        ArrayList<Double> buckStresses = new ArrayList<>(Arrays.asList(case1stress, case2stress, case3stress, case4stress));
+
+        double FOStens = TENS_MAX_MAT / tens_stress;
+        double FOScomp = COMP_MAX_MAT / comp_stress;
+        double FOSshear = TAU_MAX_MAT / shear_max;
+        double FOSglue = TAU_MAX_GLUE / maxGlueStress;
+        double FOSbuck123 = Math.min(Math.min(case1stress, case2stress), case3stress) / comp_stress;
+        double FOSshearbuck = case4stress / shear_max;
+
+        System.out.println("Applied Tens Flexural:  " + tens_stress + " MPa\nFOStens = " + FOStens + "\n");
+        System.out.println("Applied Comp Flexural:  " + comp_stress + " MPa\nFOScomp = " + FOScomp + "\n");
+        System.out.println("Applied Shear Mat:  " + shear_max + " MPa\nFOSshear = " + FOSshear + "\n");
+        System.out.print("Applied Glue Stresses:  ");
+        for (double stress : glue_stresses) {
+            System.out.print(stress + " MPa    ");
+        }
+        System.out.println("\nFOSglue = " + FOSglue + "\n");
+        System.out.println("Case 1 MAX:  " + case1stress + " MPa\nCase 2 MAX:  " + case2stress + " MPa\nCase 3 MAX:  "
+                            + case3stress + " MPa\nFOSbuck123 = " + FOSbuck123 + "\n");
+        System.out.println("Shear Buck MAX:  " + case4stress + " MPa\nFOSshearbuck = " + FOSshearbuck + "\n\n");
+        System.out.println("FOStens = " + FOStens + "\nFOScomp = " + FOScomp + "\nFOSshear = " + FOSshear + "\nFOSglue = "
+                            + FOSglue + "\nFOSbuck123 = " + FOSbuck123 + "\nFOSshearbuck = " + FOSshearbuck + "\n\n");
+
+        printFailurePs(Mratio, Vratio, glueHeights, glueWidth, buckStresses);
+    }
+
 
 
 
 
     public double PfailFlex(double sigmaMax, double Mratio, double y) {
-        return (sigmaMax*getI()) / (Mratio*y);
+        // ****** This function calculates the load P that will cause failure for a given flexural failure stress (sigmaMax),
+        //        a given applied moment in terms of P (Mratio), and a given distance from centroid (y)
+        // ******
+        return (sigmaMax * getI()) / (Mratio * y);
     }
 
     public double PfailShear(double tauMax, double Vratio, double hOfInterest) {
-        return (tauMax*getI()*getMinB(hOfInterest)) / (Vratio*getQ(hOfInterest));
+        // ****** This function calculates the load P that will cause failure for a given shear failure stress (tauMax),
+        //        a given applied shear in terms of P (Vratio), and a given height of the cross section (hOfInterest)
+        // ******
+        return (tauMax * getI() * getMinB(hOfInterest)) / (Vratio * getQ(hOfInterest));
+    }
+
+    public double PfailGlue(double tauMax, double Vratio, double hOfInterest, double glueWidth) {
+        // ****** This function calculates the load P that will cause glue failure for a given glue shear failure stress (tauMax),
+        //        a given applied shear in terms of P (Vratio), a given height of the cross section (hOfInterest),
+        //        and a given width of glue applied
+        // ******
+        return (tauMax * getI() * glueWidth) / (Vratio * getQ(hOfInterest));
     }
 
 
 
 
-    public void printFailurePs(double Mratio, double Vratio, ArrayList<Double> glue_heights, ArrayList<Double> buckStresses) {
+
+    public void printFailurePs(double Mratio, double Vratio, ArrayList<Double> glueHeights, double glueWidth, ArrayList<Double> buckStresses) {
+        // ****** This function calculates the load P that will cause the cross section to fail by flexural, shear material, shear glue, and local buckling failures
+        //        for a given applied moment in terms of P (Mratio) and shear force in terms of P (Vratio) 
+        //        It calculates failure load P for glue by shear at all heights where glue is applied (glueHeights) for a given width of glue applied (glueWidth)
+        //        It calculates failure load P for local buckling if any of the 4 cases (buckStresses) yield a lower failure stress than the material's failure stresses
+        //        The load P represents the force applied by the lightest wheel of the train and is multiplied by the ratios for successive tests in Load Case 2
+        //        to find the maximum weight of the train that the cross section can support
+        // ******
         ArrayList<Double> allPFails = new ArrayList<>();
 
         double PflexTens = PfailFlex(TENS_MAX_MAT, Mratio, getYbar());
@@ -643,8 +736,8 @@ public class CrossSection {
         allPFails.add(PshearMat);
         System.out.println("Pfail Shear Matboard: " + PshearMat + " N");
 
-        for (Double h : glue_heights) {
-            double Pfail = PfailShear(TAU_MAX_GLUE, Vratio, h);
+        for (Double h : glueHeights) {
+            double Pfail = PfailGlue(TAU_MAX_GLUE, Vratio, h, glueWidth);
             allPFails.add(Pfail);
             System.out.println("Pfail Shear Glue: " + Pfail + " N       at height " + h + " mm");
         }
@@ -669,14 +762,18 @@ public class CrossSection {
         double Pfailure = allPFails.get(0);
         System.out.println("\n\nThe bridge will fail at P = " + Pfailure + " N");
 
-        double trainWeight = Pfailure*(1 + 1 + 1.1 + 1.1 + 1.1*1.35 + 1.1*1.35);
-        System.out.println("This is when the middle car is " + Pfailure*2 + " N and the train weighs " + trainWeight + " N");
+        double trainWeight = Pfailure * (1 + 1 + 1.1 + 1.1 + 1.1 * 1.35 + 1.1 * 1.35);
+        System.out.println(
+                "This is when the middle car is " + Pfailure * 2 + " N and the train weighs " + trainWeight + " N\n\n");
     }
 
 
 
 
+
     public void printComponents() {
+        // ****** This function displays all the shapes that make up the cross section with their properties 
+        // ******
         int i = 1;
         for (Shape shape : this.components) {
             System.out.print("Shape ");
@@ -686,108 +783,254 @@ public class CrossSection {
             i++;
         }
     }
-    
+
 
 
 
     public void printDetails() {
-        System.out.println("\n\nThe yBar value is  " + getYbar() + " mm");
+        // ****** This function displays the yBar, yTop, I, and yBot-to-yTop ratio for the cross section
+        System.out.println("\n\nThe yBar value is " + getYbar() + " mm");
         System.out.println("Therefore yTop is " + getYtop() + " mm");
-        System.out.println("The I value is " + getI() + " mm^4\n");
+        System.out.println("The yBot:yTop ratio is " + getYbar()/getYtop());
+        System.out.println("The I value is " + getI() + " mm^4\n\n");
     }
 }
 
-package civ;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
-    private static double Vmax = 257.6; 
-    private static double Mmax = 69481;
-    private static double Mratio = 1222.71;
-    private static double Vratio = 4.8356;
-
-    public static void testDesign0() {
+    public static void testDesign0(double Mmax, double Vmax) {
+        // ***** This function makes the cross section for Design 0, calculates the yBar and I values,
+        //       and calculates the FOS values based on a given max applied moment (Mmax) and shear force (Vmax) 
+        // *****
         CrossSection design0 = new CrossSection();
         design0.addRect(1.27, 80, 0);
-        for (int i = 0; i _less_ 2; i++) {
-            design0.addRect(72.46,1.27,1.27);
-            design0.addRect(1.27,6.27 , 73.73);
+        for (int i = 0; i < 2; i++) {
+            design0.addRect(72.46, 1.27, 1.27);
+            design0.addRect(1.27, 6.27, 73.73);
         }
         design0.addRect(1.27, 100, 75);
         design0.printDetails();
 
-        ArrayList<Double> glueH = new ArrayList<>();
-        glueH.add(75.0);
-        design0.printFOSAnalysis(Mmax, Vmax, glueH, 1, 80, 1, 20, 1, design0.getYtop()-1.27, 1, design0.getYbar()+design0.getYtop()-2*1.27, 200);
+        ArrayList<Double> glueH = new ArrayList<>(Arrays.asList(75.0));
+        ArrayList<Integer> buckCaseLayers = new ArrayList<>(Arrays.asList(1, 1, 1, 1));
+        ArrayList<Double> buckCaseWidths = new ArrayList<>(
+                Arrays.asList(80.0, 10.0, design0.getYtop() - 1.27, design0.getYbar() + design0.getYtop() - 1.27));
+
+        design0.printFOSAnalysis(Mmax, Vmax, glueH, buckCaseLayers, buckCaseWidths, 400);
     }
 
-    public static void testDesignFinal() {
-        CrossSection design1 = new CrossSection();
-        ArrayList<Double> glueH = new ArrayList<>();
-
-        design1.addRect(1.27,60,0);
-        for (int i=0; i<2; i++) {
-            design1.addRect(75.92, 73.65, 1.27, 1.27);
-            design1.addRect(1.27,19,74.92);
+    public static void testInitial (double Mmax, double Vmax, double totalHeight) {
+        // ***** This function makes the cross section for our Initial Design with a given total height (totalHeight), calculates the yBar and I values,
+        //       and calculates the FOS values based on a given max applied moment (Mmax) and shear force (Vmax) 
+        // *****
+        CrossSection designI = new CrossSection();
+        for (int i = 0; i < 3; i++) {
+            if (i > 0) {
+                designI.addRect(totalHeight-4*1.27, 1.27, 0);
+                designI.addRect(1.27, 20, totalHeight-4*1.27);
+            }
+            designI.addRect(1.27, 100, totalHeight-3*1.27+i*1.27);
         }
-        for (int k=0; k_less_3; k++) {
-            design1.addRect(1.27,100,76.19+k*1.27);
-            glueH.add(76.19+k*1.67);
-        }
-        design1.printDetails();
-
-        design1.printFullAnalysis(Mmax, Vmax, Mratio, Vratio, glueH, 3, 100, 1, 1, 1, design1.getYtop()-3*1.27, 1, design1.getYbar()+design1.getYtop()-4*1.27, 178);
+        designI.printDetails();
     }
-    
+
+    public static void testIteration1 (double Mmax, double Vmax) {
+        // ***** This function makes the cross section for our First Iteration, calculates the yBar and I values,
+        //       and calculates the FOS values based on a given max applied moment (Mmax) and shear force (Vmax) 
+        // *****
+        CrossSection designI1 = new CrossSection();
+        ArrayList<Double> glueH = new ArrayList<>();
+        designI1.addRect(1.27, 75, 0);
+        designI1.addRect(1.27,75,2.54);
+        for (int i = 0; i < 3; i++) {
+            if (i < 2) {
+                designI1.addRect(1.27, 15, 1.27);
+                designI1.addRect(72.38, 1.27, 2.54);
+                designI1.addRect(69.84, 1.27, 3.81);
+                designI1.addRect(1.27, 18.73, 73.65);
+                designI1.addRect(1.27, 20, 74.92);
+                glueH.add(1.27 + i*1.27);
+            }
+            designI1.addRect(1.27, 100, 76.19 + i * 1.27);
+            glueH.add(76.19 + i * 1.27);
+        }
+        glueH.add(74.92);
+
+        designI1.printDetails();
+
+        ArrayList<Integer> buckCaseLayers = new ArrayList<>(Arrays.asList(3, 3, 2, 2));
+        ArrayList<Double> buckCaseWidths = new ArrayList<>(
+                Arrays.asList(75.0, 12.5, designI1.getYtop() - 3 * 1.27,
+                    designI1.getYbar() + designI1.getYtop() - 4 * 1.27));
+
+        designI1.printFOSAnalysis(Mmax, Vmax, glueH, buckCaseLayers, buckCaseWidths, 400);
+    }
+
+    public static void testIteration2 (double Mmax, double Vmax) {
+        // ***** This function makes the cross section for our Second Iteration, calculates the yBar and I values,
+        //       and calculates the FOS values based on a given max applied moment (Mmax) and shear force (Vmax) 
+        // *****
+        CrossSection designI2 = new CrossSection();
+        ArrayList<Double> glueH = new ArrayList<>();
+        designI2.addRect(1.27, 60, 0);
+        designI2.addRect(1.27, 97, 73.65);
+        glueH.add(1.27);
+        glueH.add(74.92);
+        for (int i = 0; i < 2; i++) {
+            designI2.addRect(76.32, 73.65, 1.27, 1.27);
+            designI2.addRect(73.69, 71.11, 1.27, 2.54);
+            designI2.addRect(1.27, 10, 1.27);
+            designI2.addRect(1.27, 20, 74.92);
+        }
+        for (int k = 0; k < 3; k++) {
+            designI2.addRect(1.27, 100, 76.19 + k * 1.27);
+            glueH.add(76.19 + k * 1.27);
+        }
+        designI2.printDetails();
+
+        ArrayList<Integer> buckCaseLayers = new ArrayList<>(Arrays.asList(4, 4, 2, 2));
+        ArrayList<Double> buckCaseWidths = new ArrayList<>(
+                Arrays.asList(100.0, 1.0, designI2.getYtop() - 5 * 1.27,
+                        designI2.getYbar() + designI2.getYtop() - 6 * 1.27));
+
+        designI2.printFOSAnalysis(Mmax, Vmax, glueH, buckCaseLayers, buckCaseWidths, 400);
+
+    }
+
+    public static void testDesignFinalPt1(double Mmax, double Vmax, double Mratio, double Vratio) {
+        // ***** This function makes the cross section for our Third Iteration, calculates the yBar and I values,
+        //       calculates the FOS values based on given max applied moment (Mmax) and shear force (Vmax),
+        //       and calculates the failure load P based on given applied moment in terms of P (Mratio) and applied shear in terms of P (Vratio)
+        // *****
+        CrossSection designF1 = new CrossSection();
+        ArrayList<Double> glueH = new ArrayList<>();
+        designF1.addRect(1.27, 62, 0);
+        for (int i = 0; i < 2; i++) {
+            designF1.addRect(75.98, 73.65, 1.27, 1.27);
+            designF1.addRect(1.27, 19, 74.92);
+        }
+        for (int k = 0; k < 3; k++) {
+            designF1.addRect(1.27, 100, 76.19 + k * 1.27);
+            glueH.add(76.19 + k * 1.27);
+        }
+        designF1.printDetails();
+
+        ArrayList<Integer> buckCaseLayers = new ArrayList<>(Arrays.asList(3, 3, 1, 1));
+        ArrayList<Double> buckCaseWidths = new ArrayList<>(
+                Arrays.asList(100.0, 1.0, designF1.getYtop() - 3 * 1.27,
+                        designF1.getYbar() + designF1.getYtop() - 4 * 1.27));
+
+        designF1.printFullAnalysis(Mmax, Vmax, Mratio, Vratio, glueH, 5, buckCaseLayers, buckCaseWidths, 437);
+
+    }
+
+    public static void testDesignFinalPt2(double Mmax, double Vmax, double Mratio, double Vratio) {
+        // ***** This function makes the cross section for our Fourth Iteration, calculates the yBar and I values,
+        //       calculates the FOS values based on given max applied moment (Mmax) and shear force (Vmax),
+        //       and calculates the failure load P based on given applied moment in terms of P (Mratio) and applied shear in terms of P (Vratio)
+        // *****
+        CrossSection designF2 = new CrossSection();
+        ArrayList<Double> glueH = new ArrayList<>();
+        designF2.addRect(1.27, 62, 0);
+        for (int i = 0; i < 2; i++) {
+            designF2.addRect(75.98, 73.65, 1.27, 1.27);
+            designF2.addRect(1.27, 19, 74.92);
+        }
+        designF2.addRect(1.27, 90, 73.65);
+        glueH.add(73.65);
+        for (int k = 1; k < 4; k++) {
+            designF2.addRect(1.27, 100, 74.92 + k*1.27);
+        glueH.add(74.92 + k*1.27);
+        }
+        designF2.printDetails();
+
+        ArrayList<Integer> buckCaseLayers = new ArrayList<>(Arrays.asList(4, 4, 1, 1));
+        ArrayList<Double> buckCaseWidths = new ArrayList<>(
+                Arrays.asList(100.0, 1.0, designF2.getYtop() - 5 * 1.27,
+                        designF2.getYbar() + designF2.getYtop() - 6 * 1.27));
+
+        designF2.printFullAnalysis(Mmax, Vmax, Mratio, Vratio, glueH, 5, buckCaseLayers, buckCaseWidths, 437);
+
+    }
+
     public static void main(String[] args) {
-        testDesign0();
-        testDesignFinal();
+        // These values were derived from our Python code analyzing Load Case 1
+        double MmaxLoad1 = 69841;
+        double  VmaxLoad1 = 257.6;
+
+        // These values were derived from our Python code analyzing the base case of Load Case 2
+        double MmaxLoad2 = 78128;
+        double  VmaxLoad2 = 304.4;
+
+        // These ratios were derived from our Python code analyzing successive cases of Load Case 2
+        double MratioLoad2 = 1222.71;
+        double VratioLoad2 = 4.8356;
+
+        // Testing Design 0 for Load Case 1
+        testDesign0(MmaxLoad1, VmaxLoad1);
+
+        // Testing Intital Design for Load Case 2 base case at heights of 60 mm, 80 mm, and 100 mm
+        testInitial(MmaxLoad2, VmaxLoad2,60);
+        testInitial(MmaxLoad2, VmaxLoad2,80);
+        testInitial(MmaxLoad2, VmaxLoad2,100);
+
+        // Testing First Iteration for Load Case 2
+        testIteration1(MmaxLoad2, VmaxLoad2);
+
+        // Testing Second Iteration for Load Case 2
+        testIteration2(MmaxLoad2, VmaxLoad2);
+        
+        // Testing Third Iteration for Load Case 2
+        testDesignFinalPt1(MmaxLoad2, VmaxLoad2, MratioLoad2, VratioLoad2);
+
+        // Testing Fourth Iteration for Load Case 2
+        testDesignFinalPt2(MmaxLoad2, VmaxLoad2, MratioLoad2, VratioLoad2);
+
+
+        
+        // ****** Uncomment and run the following block of code to input a new cross section idea that is not one of the pre-defined iterations
+        //        It will calculate yBar and I for the cross section
+        // ******
 
         // Scanner myobj = new Scanner(System.in);
-        // System.out.print("How many shapes in your cross section?  ");
+        // System.out.print("How many shapes in your cross section? ");
         // int numShapes = myobj.nextInt();
 
         // Scanner myobj2 = new Scanner(System.in);
-        // System.out.print("Are there diagonals (y/n)?  ");
+        // System.out.print("Are there diagonals (y/n)? ");
         // String ans = myobj2.nextLine();
 
         // CrossSection design = new CrossSection();
-        // for(int i=0; i<numShapes; i++) {
+        // for (int i = 0; i < numShapes; i++) {
         //     double l = -1.0;
         //     System.out.print("For shape ");
-        //     System.out.println(i+1);
-        //     System.out.print("How many of these are there?  ");
+        //     System.out.println(i + 1);
+        //     System.out.print("How many of these are there? ");
         //     int count = myobj.nextInt();
         //     if (ans.equals("y")) {
-        //         System.out.print("Enter the actual height:  ");
+        //         System.out.print("Enter the actual height: ");
         //         l = myobj.nextDouble();
         //     }
-        //     System.out.print("Enter the vertical height:  ");
+        //     System.out.print("Enter the vertical height: ");
         //     double h = myobj.nextDouble();
-        //     System.out.print("Enter the base:  ");
+        //     System.out.print("Enter the base: ");
         //     double b = myobj.nextDouble();
-        //     System.out.print("How high is the bottom of the shape?  ");
+        //     System.out.print("How high is the bottom of the shape? ");
         //     double botD = myobj.nextDouble();
-        //     for (int k=0; k<count; k++) {
+        //     for (int k = 0; k < count; k++) {
         //         if (l >= 0) {
-        //             design.addRect(l, h, b,botD);
+        //             design.addRect(l, h, b, botD);
         //         } else {
         //             design.addRect(h, b, botD);
         //         }
         //     }
-        //     i += count-1;
+        //     i += count - 1;
         // }
         // design.printDetails();
-        // System.out.println(design.getQ(design.getYbar()));
-        // System.out.println(design.getQ(1.27));
-        // System.out.println(design.getQ(73.73));
-        // System.out.println(design.getQ(75));
-        // System.out.println(design.getMinB(design.getYbar()));
-        // System.out.println(design.getMinB(75));
     }
-}
-
-        
+}   
       </code></pre>
     </div>
   </div>
