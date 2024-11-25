@@ -1048,31 +1048,54 @@ public class Main {
     img.onload = function () {
       // Create multiple bouncing objects
       for (let i = 0; i < 7; i++) {
-        balls.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          dx: Math.random() * 2 + 1,
-          dy: Math.random() * 2 + 1,
-          size: 100,
-          image: img,
-        });
-      }
-      draw();
-    };
+    balls.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      dx: Math.random() * 2 + 1,
+      dy: Math.random() * 2 + 1,
+      size: 100,
+      angle: 0, // Initial rotation angle in degrees
+      rotationSpeed: Math.random() * 2 + 0.5, // Constant speed of rotation
+      image: img,
+    });
+  }
+  draw();
+};
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      balls.forEach((ball) => {
-        ctx.drawImage(ball.image, ball.x, ball.y, ball.size, ball.size);
-        ball.x += ball.dx;
-        ball.y += ball.dy;
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  balls.forEach((ball) => {
+    // Save canvas state
+    ctx.save();
 
-        // Bounce off walls
-        if (ball.x < 0 || ball.x + ball.size > canvas.width) ball.dx *= -1;
-        if (ball.y < 0 || ball.y + ball.size > canvas.height) ball.dy *= -1;
-      });
-      requestAnimationFrame(draw);
-    }
+    // Translate to the center of the image
+    const centerX = ball.x + ball.size / 2;
+    const centerY = ball.y + ball.size / 2;
+    ctx.translate(centerX, centerY);
+
+    // Rotate the canvas
+    ctx.rotate((ball.angle * Math.PI) / 180);
+
+    // Draw the image (adjusted for rotation)
+    ctx.drawImage(ball.image, -ball.size / 2, -ball.size / 2, ball.size, ball.size);
+
+    // Restore canvas state
+    ctx.restore();
+
+    // Update position
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+
+    // Update rotation angle (constant spin)
+    ball.angle += ball.rotationSpeed;
+
+    // Bounce off walls
+    if (ball.x < 0 || ball.x + ball.size > canvas.width) ball.dx *= -1;
+    if (ball.y < 0 || ball.y + ball.size > canvas.height) ball.dy *= -1;
+  });
+
+  requestAnimationFrame(draw);
+}
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach((tab) => {
