@@ -70,23 +70,40 @@
     }
     .scroll-nav {
       position: fixed;
-      top: 20%;
+      top: 30%;
       left: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2rem;
+      gap: 1.5rem;
     }
     .scroll-nav img {
       width: 40px;
       opacity: 0.3;
       transition: opacity 0.3s ease;
     }
-    .scroll-nav img.active {
+    .scroll-nav img.completed {
       opacity: 1;
     }
+    .progress-track {
+      position: fixed;
+      top: 20%;
+      left: 3rem;
+      width: 4px;
+      height: 50vh;
+      background-color: #e5e7eb;
+    }
+    .progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      background-color: #2563eb;
+      height: 0%;
+    }
     .scroll-section {
-      margin-bottom: 6rem;
+      margin-bottom: 8rem;
+      scroll-margin-top: 100px;
     }
   </style>
 </head>
@@ -105,6 +122,9 @@
 
   <div id="position" class="tab-content active">
     <div class="scroll-nav">
+      <div class="progress-track">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
       <img id="soccerIcon" src="https://cdn-icons-png.flaticon.com/512/826/826114.png" alt="Soccer Ball" />
       <img id="tkdIcon" src="https://cdn-icons-png.flaticon.com/512/685/685352.png" alt="Black Belt" />
       <img id="robotIcon" src="https://cdn-icons-png.flaticon.com/512/4712/4712103.png" alt="Robot" />
@@ -117,7 +137,7 @@
 
     <div id="tkd" class="scroll-section">
       <h2>Taekwondo Phase</h2>
-      <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sodales consequat magna ante condimentum neque at luctus. Tempus leo eu aenean sed diam urna tempor. Elementum a enim euismod quam justo lectus commodo. Ut hendrerit semper vel class aptent taciti sociosqu. Fames primis vulputate ornare sagittis vehicula praesent dui. Montes nascetur ridiculus mus donec rhoncus eros lobortis. Auctor curabitur facilisi cubilia curae hac habitasse platea. Vestibulum fusce dictum risus blandit quis suspendisse aliquet. Placerat in id cursus mi pretium tellus duis. Ligula congue sollicitudin erat viverra ac tincidunt nam. Egestas iaculis massa nisl malesuada lacinia integer nunc. Nullam volutpat porttitor ullamcorper rutrum gravida cras eleifend. Himenaeos orci varius natoque penatibus et magnis dis. Accumsan maecenas potenti ultricies habitant morbi senectus netus. Odio phasellus non purus est efficitur laoreet mauris. Adipiscing elit quisque faucibus ex sapien vitae pellentesque. At luctus nibh finibus facilisis dapibus etiam interdum. Urna tempor pulvinar vivamus fringilla lacus nec metus. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Taciti sociosqu ad litora torquent per conubia nostra. Praesent dui felis venenatis ultrices proin libero feugiat. Eros lobortis nulla molestie mattis scelerisque maximus eget. Habitasse platea dictumst lorem ipsum dolor sit amet. Suspendisse aliquet nisi sodales consequat magna ante condimentum. Tellus duis convallis tempus leo eu aenean sed. Tincidunt nam porta elementum a enim euismod quam. Integer nunc posuere ut hendrerit semper vel class. Cras eleifend turpis fames primis vulputate ornare sagittis. Magnis dis parturient montes nascetur ridiculus mus donec. Senectus netus suscipit auctor curabitur facilisi cubilia curae. Laoreet mauris pharetra vestibulum fusce dictum risus blandit. Vitae pellentesque sem placerat in id cursus mi. Etiam interdum tortor ligula congue sollicitudin erat viverra. Nec metus bibendum egestas iaculis massa nisl malesuada. Aliquam imperdiet mollis nullam volutpat porttitor ullamcorper rutrum. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Maximus eget fermentum odio phasellus non purus est. Sit amet consectetur adipiscing elit quisque faucibus ex. Ante condimentum neque at luctus nibh finibus facilisis. Aenean sed diam urna tempor pulvinar vivamus fringilla. Euismod quam justo lectus commodo augue arcu dignissim. Vel class aptent taciti sociosqu ad litora torquent. Ornare sagittis vehicula praesent dui felis venenatis ultrices. Mus donec rhoncus eros lobortis nulla molestie mattis. Cubilia curae hac habitasse platea dictumst lorem ipsum. Risus blandit quis suspendisse aliquet nisi sodales consequat. Cursus mi pretium tellus duis convallis tempus leo. Erat viverra ac tincidunt nam porta elementum a. Nisl malesuada lacinia integer nunc posuere ut hendrerit. Ullamcorper rutrum gravida cras eleifend turpis fames primis. Natoque penatibus et magnis dis parturient montes nascetur. Ultricies habitant morbi senectus netus suscipit auctor curabitur. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Faucibus ex sapien vitae pellentesque sem placerat in. Finibus facilisis dapibus etiam interdum tortor ligula congue. Vivamus fringilla lacus nec metus bibendum egestas iaculis. Arcu dignissim velit aliquam imperdiet mollis nullam volutpat. Litora torquent per conubia nostra inceptos himenaeos orci. Venenatis ultrices proin libero feugiat tristique accumsan maecenas. Molestie mattis scelerisque maximus eget fermentum odio phasellus. Lorem ipsum dolor sit amet consectetur adipiscing elit. Sodales consequat magna ante condimentum neque at luctus. Tempus leo eu aenean sed diam urna tempor. Elementum a enim euismod quam justo lectus commodo. Ut hendrerit semper vel class aptent taciti sociosqu. Fames primis vulputate ornare sagittis vehicula praesent dui. Montes nascetur ridiculus mus donec rhoncus eros lobortis. Auctor curabitur facilisi cubilia curae hac habitasse platea. Vestibulum fusce dictum risus blandit quis suspendisse aliquet. Placerat in id cursus mi pretium tellus duis. Ligula congue sollicitudin erat viverra ac tincidunt nam. Egestas iaculis massa nisl malesuada lacinia integer nunc. Nullam volutpat porttitor ullamcorper rutrum gravida cras eleifend. Himenaeos orci varius natoque penatibus et magnis dis. Accumsan maecenas potenti ultricies habitant morbi senectus netus. Odio phasellus non purus est efficitur laoreet mauris. Adipiscing elit quisque faucibus ex sapien vitae pellentesque. At luctus nibh finibus facilisis dapibus etiam interdum. Urna tempor pulvinar vivamus fringilla lacus nec metus. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Taciti sociosqu ad litora torquent per conubia nostra. Praesent dui felis venenatis ultrices proin libero feugiat. Eros lobortis nulla molestie mattis scelerisque maximus eget. Habitasse platea dictumst lorem ipsum dolor sit amet. Suspendisse aliquet nisi sodales consequat magna ante condimentum. Tellus duis convallis tempus leo eu aenean sed. Tincidunt nam porta elementum a enim euismod quam. Integer nunc posuere ut hendrerit semper vel class. Cras eleifend turpis fames primis vulputate ornare sagittis. Magnis dis parturient montes nascetur ridiculus mus donec. Senectus netus suscipit auctor curabitur facilisi cubilia curae. Laoreet mauris pharetra vestibulum fusce dictum risus blandit. Vitae pellentesque sem placerat in id cursus mi. Etiam interdum tortor ligula congue sollicitudin erat viverra. Nec metus bibendum egestas iaculis massa nisl malesuada. Aliquam imperdiet mollis nullam volutpat porttitor ullamcorper rutrum. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Maximus eget fermentum odio phasellus non purus est. Sit amet consectetur adipiscing elit quisque faucibus ex. Ante condimentum neque at luctus nibh finibus facilisis. Aenean sed diam urna tempor pulvinar vivamus fringilla. Euismod quam justo lectus commodo augue arcu dignissim..</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sodales consequat magna ante condimentum neque at luctus. Tempus leo eu aenean sed diam urna tempor. Elementum a enim euismod quam justo lectus commodo. Ut hendrerit semper vel class aptent taciti sociosqu. Fames primis vulputate ornare sagittis vehicula praesent dui. Montes nascetur ridiculus mus donec rhoncus eros lobortis. Auctor curabitur facilisi cubilia curae hac habitasse platea. Vestibulum fusce dictum risus blandit quis suspendisse aliquet. Placerat in id cursus mi pretium tellus duis. Ligula congue sollicitudin erat viverra ac tincidunt nam. Egestas iaculis massa nisl malesuada lacinia integer nunc. Nullam volutpat porttitor ullamcorper rutrum gravida cras eleifend. Himenaeos orci varius natoque penatibus et magnis dis. Accumsan maecenas potenti ultricies habitant morbi senectus netus. Odio phasellus non purus est efficitur laoreet mauris. Adipiscing elit quisque faucibus ex sapien vitae pellentesque. At luctus nibh finibus facilisis dapibus etiam interdum. Urna tempor pulvinar vivamus fringilla lacus nec metus. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Taciti sociosqu ad litora torquent per conubia nostra. Praesent dui felis venenatis ultrices proin libero feugiat. Eros lobortis nulla molestie mattis scelerisque maximus eget. Habitasse platea dictumst lorem ipsum dolor sit amet. Suspendisse aliquet nisi sodales consequat magna ante condimentum. Tellus duis convallis tempus leo eu aenean sed. Tincidunt nam porta elementum a enim euismod quam. Integer nunc posuere ut hendrerit semper vel class. Cras eleifend turpis fames primis vulputate ornare sagittis. Magnis dis parturient montes nascetur ridiculus mus donec. Senectus netus suscipit auctor curabitur facilisi cubilia curae. Laoreet mauris pharetra vestibulum fusce dictum risus blandit. Vitae pellentesque sem placerat in id cursus mi. Etiam interdum tortor ligula congue sollicitudin erat viverra. Nec metus bibendum egestas iaculis massa nisl malesuada. Aliquam imperdiet mollis nullam volutpat porttitor ullamcorper rutrum. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Maximus eget fermentum odio phasellus non purus est. Sit amet consectetur adipiscing elit quisque faucibus ex. Ante condimentum neque at luctus nibh finibus facilisis. Aenean sed diam urna tempor pulvinar vivamus fringilla. Euismod quam justo lectus commodo augue arcu dignissim. Vel class aptent taciti sociosqu ad litora torquent. Ornare sagittis vehicula praesent dui felis venenatis ultrices. Mus donec rhoncus eros lobortis nulla molestie mattis. Cubilia curae hac habitasse platea dictumst lorem ipsum. Risus blandit quis suspendisse aliquet nisi sodales consequat. Cursus mi pretium tellus duis convallis tempus leo. Erat viverra ac tincidunt nam porta elementum a. Nisl malesuada lacinia integer nunc posuere ut hendrerit. Ullamcorper rutrum gravida cras eleifend turpis fames primis. Natoque penatibus et magnis dis parturient montes nascetur. Ultricies habitant morbi senectus netus suscipit auctor curabitur. Purus est efficitur laoreet mauris pharetra vestibulum fusce. Faucibus ex sapien vitae pellentesque sem placerat in. Finibus facilisis dapibus etiam interdum tortor ligula congue. Vivamus fringilla lacus nec metus bibendum egestas iaculis. Arcu dignissim velit aliquam imperdiet mollis nullam volutpat. Litora torquent per conubia nostra inceptos himenaeos orci. Venenatis ultrices proin libero feugiat tristique accumsan maecenas. Molestie mattis scelerisque maximus eget fermentum odio phasellus. Lorem ipsum dolor sit amet consectetur adipiscing elit. Sodales consequat magna ante condimentum neque at luctus. Tempus leo eu aenean sed diam urna tempor. Elementum a enim euismod quam justo lectus commodo. Ut hendrerit semper vel class aptent taciti sociosqu. Fames primis vulputate ornare sagittis vehicula praesent dui. Montes nascetur ridiculus mus donec rhoncus eros lobortis. Auctor curabitur facilisi cubilia curae hac habitasse platea. Vestibulum fusce dictum risus blandit quis suspendisse aliquet. Placerat in id cursus mi pretium tellus duis. Ligula congue sollicitudin erat viverra ac tincidunt nam. Egestas iaculis massa nisl malesuada lacinia integer nunc. Nullam volutpat porttitor ullamcorper rutrum gravida cras eleifend. Himenaeos orci varius natoque penatibus et magnis dis. Accumsan maecenas potenti ultricies habitant morbi senectus netus. Odio phasellus non purus est efficitur laoreet mauris. Adipiscing elit quisque faucibus ex sapien vitae pellentesque. At luctus nibh finibus facilisis dapibus etiam interdum. Urna tempor pulvinar vivamus fringilla lacus nec metus. Lectus commodo augue arcu dignissim velit aliquam imperdiet. Taciti sociosqu ad litora torquent per conubia nostra. Praesent dui felis venenatis ultrices proin libero feugiat. Eros lobortis nulla molestie mattis scelerisque maximus eget. Habitasse platea dictumst lorem ipsum dolor sit amet. Suspendisse aliquet nisi sodales consequat magna ante condimentum. Tellus duis convallis tempus leo eu aenean sed. Tincidunt nam porta elementum a enim euismod quam. Integer nunc posuere ut hendrerit semper vel class. Cras eleifend turpis fames primis vulputate ornare sagittis. Magnis dis parturient montes nascetur ridiculus mus donec. Senectus netus suscipit auctor curabitur facilisi cubilia curae. Laoreet mauris pharetra vestibulum fusce dictum risus blandit. Vitae pellentesque sem placerat in id cursus mi. Etiam interdum tortor ligula congue sollicitudin erat viverra. Nec metus bibendum egestas iaculis massa nisl malesuada. Aliquam imperdiet mollis nullam volutpat porttitor ullamcorper rutrum. Conubia nostra inceptos himenaeos orci varius natoque penatibus. Libero feugiat tristique accumsan maecenas potenti ultricies habitant. Maximus eget fermentum odio phasellus non purus est. Sit amet consectetur adipiscing elit quisque faucibus ex. Ante condimentum neque at luctus nibh finibus facilisis. Aenean sed diam urna tempor pulvinar vivamus fringilla. Euismod quam justo lectus commodo augue arcu dignissim.</p>
     </div>
 
     <div id="robotics" class="scroll-section">
@@ -154,28 +174,26 @@
     function showTab(tabId) {
       const contents = document.querySelectorAll('.tab-content');
       const buttons = document.querySelectorAll('.tab-button');
-
       contents.forEach((content) => content.classList.remove('active'));
       buttons.forEach((btn) => btn.classList.remove('active'));
-
       document.getElementById(tabId).classList.add('active');
       event.target.classList.add('active');
     }
 
     window.addEventListener('scroll', () => {
-      const soccer = document.getElementById('soccer').getBoundingClientRect().top;
-      const tkd = document.getElementById('tkd').getBoundingClientRect().top;
-      const robotics = document.getElementById('robotics').getBoundingClientRect().top;
+      const scrollTop = window.scrollY;
+      const docHeight = document.getElementById('position').offsetHeight;
+      const windowHeight = window.innerHeight;
+      const scrollPercent = Math.min((scrollTop / (docHeight - windowHeight)) * 100, 100);
+      document.getElementById('progressBar').style.height = scrollPercent + '%';
 
-      const soccerIcon = document.getElementById('soccerIcon');
-      const tkdIcon = document.getElementById('tkdIcon');
-      const robotIcon = document.getElementById('robotIcon');
+      const soccerEnd = document.getElementById('tkd').offsetTop;
+      const tkdEnd = document.getElementById('robotics').offsetTop;
+      const pageBottom = window.scrollY + window.innerHeight;
 
-      const threshold = window.innerHeight * 0.5;
-
-      soccerIcon.classList.toggle('active', soccer < threshold);
-      tkdIcon.classList.toggle('active', tkd < threshold);
-      robotIcon.classList.toggle('active', robotics < threshold);
+      document.getElementById('soccerIcon').classList.toggle('completed', pageBottom > soccerEnd);
+      document.getElementById('tkdIcon').classList.toggle('completed', pageBottom > tkdEnd);
+      document.getElementById('robotIcon').classList.toggle('completed', scrollPercent >= 99);
     });
   </script>
 </body>
