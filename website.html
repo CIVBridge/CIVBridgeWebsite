@@ -201,13 +201,24 @@
 
   <script>
     function showTab(tabId, event) {
-      const contents = document.querySelectorAll('.tab-content');
-      const buttons = document.querySelectorAll('.tab-button');
-      contents.forEach(content => content.classList.remove('active'));
-      buttons.forEach(btn => btn.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      event.target.classList.add('active');
+    const contents = document.querySelectorAll('.tab-content');
+    const buttons = document.querySelectorAll('.tab-button');
+    const body = document.getElementById('mainBody');
+  
+    contents.forEach(content => content.classList.remove('active'));
+    buttons.forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.target.classList.add('active');
+  
+    if (tabId !== 'position') {
+      body.style.backgroundImage = 'none';
+    } else {
+      // Reset to the current phase background
+      lastPhase = ''; // so the scroll handler resets the background
+      window.dispatchEvent(new Event('scroll')); // force scroll event to fire
     }
+  }
+
 
     const cutsceneLabel = document.getElementById('cutsceneLabel');
     let lastPhase = '';
