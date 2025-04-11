@@ -937,14 +937,20 @@
     backToTopBtn.style.backgroundColor = '#844646';
     event.target.style.backgroundColor = '#844646';
   } else if (tabId === 'position') {
-    lastPhase = '';
-    window.dispatchEvent(new Event('scroll'));
-    body.style.backgroundImage = '';
-    header.style.background = 'linear-gradient(135deg, #6b7280, #9ca3af, #d1d5db)';
-    backToTopBtn.style.backgroundColor = '#9ca3af';
-    event.target.style.backgroundColor = '#9ca3af'; // match the gray active color
+  lastPhase = ''; // reset so scroll script can re-apply background
+  setTimeout(() => {
+    window.dispatchEvent(new Event('scroll')); // let it recalculate phase background
+  }, 50); // slight delay for smooth transition
 
-  } else {
+  body.style.backgroundImage = "url('intro-background.png')"; // set starting background
+  body.style.backgroundColor = 'transparent'; // ensure image is not hidden
+  header.style.background = 'linear-gradient(135deg, #6b7280, #9ca3af, #d1d5db)';
+  backToTopBtn.style.backgroundColor = '#9ca3af';
+  event.target.style.backgroundColor = '#9ca3af';
+}
+
+
+  else {
     body.style.backgroundImage = 'none';
     body.style.backgroundColor = '#ffffff';
     header.style.background = 'linear-gradient(135deg, #6b7280, #9ca3af, #d1d5db)';
