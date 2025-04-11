@@ -125,6 +125,29 @@
       height: 100vh;
       width: 100%;
     }
+
+    .fade-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.5s ease, transform 1.5s ease;
+  }
+  
+  .fade-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .section-container {
+    max-width: 900px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: white;
+    color: black;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+  }
+
     #intro.cutscene-space { height: 0; }
   </style>
 </head>
@@ -185,19 +208,72 @@
   </div>
 
   <div id="praxis1" class="tab-content">
-    <h2>Praxis I</h2>
-    <p><strong>Summary:</strong> Provide a clear and professional summary of your Praxis I project, including context, challenges, and outcomes.</p>
+  <div class="section-container fade-section">
+    <h2>One Pager</h2>
+    <p>Brief overview of your Praxis I project’s vision and goals in a concise one-pager format.</p>
   </div>
 
-  <div id="civ102" class="tab-content">
-    <h2>CIV102 Bridge</h2>
-    <p><strong>Summary:</strong> Describe the CIV102 bridge project’s objectives, methodology, and final results, emphasizing your design decisions and teamwork.</p>
+  <div class="section-container fade-section">
+    <h2>CTMF 1</h2>
+    <p>Explain your first application of the CTMF model and how you began to navigate the design cycle.</p>
   </div>
+
+  <div class="section-container fade-section">
+    <h2>CTMF 2</h2>
+    <p>Discuss how your understanding evolved and how iteration improved your approach.</p>
+  </div>
+
+  <div class="section-container fade-section">
+    <h2>CTMF 3</h2>
+    <p>Final reflections on the project, and how your work aligned with user needs and technical constraints.</p>
+  </div>
+</div>
+
+  <div id="civ 102" class="tab-content">
+  <div class="section-container fade-section">
+    <h2>One Pager</h2>
+    <p>Brief overview of your Praxis I project’s vision and goals in a concise one-pager format.</p>
+  </div>
+
+  <div class="section-container fade-section">
+    <h2>CTMF 1</h2>
+    <p>Explain your first application of the CTMF model and how you began to navigate the design cycle.</p>
+  </div>
+
+  <div class="section-container fade-section">
+    <h2>CTMF 2</h2>
+    <p>Discuss how your understanding evolved and how iteration improved your approach.</p>
+  </div>
+
+  <div class="section-container fade-section">
+    <h2>CTMF 3</h2>
+    <p>Final reflections on the project, and how your work aligned with user needs and technical constraints.</p>
+  </div>
+</div>
+
 
   <div id="praxis2" class="tab-content">
-    <h2>Praxis II</h2>
-    <p><strong>Summary:</strong> Outline your Praxis II design process, showcasing how your engineering thinking has matured and how it connects to your professional identity.</p>
+  <div class="section-container fade-section">
+    <h2>One Pager</h2>
+    <p>Brief overview of your Praxis I project’s vision and goals in a concise one-pager format.</p>
   </div>
+
+  <div class="section-container fade-section">
+    <h2>CTMF 1</h2>
+    <p>Explain your first application of the CTMF model and how you began to navigate the design cycle.</p>
+  </div>
+
+  <div class="section-container fade-section">
+    <h2>CTMF 2</h2>
+    <p>Discuss how your understanding evolved and how iteration improved your approach.</p>
+  </div>
+
+  <div class="section-container fade-section">
+    <h2>CTMF 3</h2>
+    <p>Final reflections on the project, and how your work aligned with user needs and technical constraints.</p>
+  </div>
+</div>
+
 
   <script>
     function showTab(tabId, event) {
@@ -254,6 +330,24 @@
         }
       }
     });
+
+    function handleFadeSections() {
+    const fadeSections = document.querySelectorAll('.fade-section');
+    const triggerBottom = window.innerHeight * 0.85;
+  
+    fadeSections.forEach(section => {
+      const sectionTop = section.getBoundingClientRect().top;
+      if (sectionTop < triggerBottom) {
+        section.classList.add('visible');
+      } else {
+        section.classList.remove('visible');
+      }
+    });
+  }
+  
+  window.addEventListener('scroll', handleFadeSections);
+  window.addEventListener('load', handleFadeSections);
+
   </script>
 </body>
 </html>
