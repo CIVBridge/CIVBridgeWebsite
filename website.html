@@ -431,8 +431,8 @@
   backToTopBtn.addEventListener("click", () => {
     const activeTab = document.querySelector(".tab-content.active");
     if (activeTab) {
-      const offset = activeTab.getBoundingClientRect().top + window.pageYOffset - 20; // adjust offset if needed
-      window.scrollTo({ top: offset, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
     }
   });
 
