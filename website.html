@@ -15,12 +15,17 @@
       font-family: 'Inter', sans-serif;
       background-color: #f3f4f6;
       color: #111827;
+      transition: background-image 1s ease-in-out;
+      background-size: cover;
+      background-position: center;
     }
     header {
-      background-color: #1f2937;
+      background-color: rgba(31, 41, 55, 0.85);
       padding: 2rem;
       text-align: center;
       color: white;
+      position: relative;
+      z-index: 2;
     }
     .tabs {
       display: flex;
@@ -28,6 +33,8 @@
       margin-top: 2rem;
       gap: 1rem;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
     }
     .tab-button {
       background-color: #e5e7eb;
@@ -47,11 +54,12 @@
       display: none;
       max-width: 1000px;
       margin: 2rem auto;
-      background-color: white;
+      background-color: rgba(255, 255, 255, 0.95);
       border-radius: 1rem;
       padding: 2rem;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       position: relative;
+      z-index: 2;
     }
     .tab-content.active {
       display: block;
@@ -119,7 +127,7 @@
     }
   </style>
 </head>
-<body>
+<body id="mainBody">
   <header>
     <h1>Engineering Design Portfolio</h1>
     <p>ESC102 | Student Engineer Design Showcase</p>
@@ -137,9 +145,9 @@
       <div class="progress-track">
         <div id="progressBar" class="progress-bar"></div>
       </div>
-      <img id="soccerIcon" src="https://cdn-icons-png.flaticon.com/512/826/826114.png" alt="Soccer Ball" />
-      <img id="tkdIcon" src="https://cdn-icons-png.flaticon.com/512/685/685352.png" alt="Black Belt" />
-      <img id="robotIcon" src="https://cdn-icons-png.flaticon.com/512/4712/4712103.png" alt="Robot" />
+      <img id="soccerIcon" src="soccericon.png" alt="Soccer Ball" />
+      <img id="tkdIcon" src="blackbelticon.jpg" alt="Black Belt" />
+      <img id="robotIcon" src="roboticon.png" alt="Robot" />
     </div>
 
     <div class="intro-section">
@@ -219,8 +227,25 @@
 
       const soccerEnd = document.getElementById('tkd').offsetTop;
       const tkdEnd = document.getElementById('robotics').offsetTop;
-      const pageBottom = window.scrollY + window.innerHeight;
+      const soccerStart = document.getElementById('soccer').offsetTop;
+      const tkdStart = document.getElementById('tkd').offsetTop;
+      const roboticsStart = document.getElementById('robotics').offsetTop;
 
+      const scrollPos = window.scrollY + window.innerHeight / 2;
+
+      const body = document.getElementById('mainBody');
+
+      if (scrollPos >= roboticsStart) {
+        body.style.backgroundImage = "url('robotics-background.jpg!w700wp')";
+      } else if (scrollPos >= tkdStart) {
+        body.style.backgroundImage = "url('taekwondo-background.png')";
+      } else if (scrollPos >= soccerStart) {
+        body.style.backgroundImage = "url('soccer-background.png')";
+      } else {
+        body.style.backgroundImage = "none";
+      }
+
+      const pageBottom = window.scrollY + window.innerHeight;
       document.getElementById('soccerIcon').classList.toggle('completed', pageBottom > soccerEnd);
       document.getElementById('tkdIcon').classList.toggle('completed', pageBottom > tkdEnd);
       document.getElementById('robotIcon').classList.toggle('completed', scrollPercent >= 99);
