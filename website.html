@@ -67,34 +67,65 @@
       color: black;
       border-radius: 1rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      position: relative;
     }
     .tab-content.active {
       display: block;
     }
-    .cutscene-text-tab {
+    .scroll-section, .intro-section, .conclusion-section {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 1rem 2rem;
       text-align: center;
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #111;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeTitle 1s ease forwards;
-      margin-top: 2rem;
     }
-    @keyframes fadeTitle {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .scroll-section img,
+    .intro-section img,
+    .conclusion-section img {
+      max-width: 100%;
+      margin: 1rem 0;
+      border-radius: 1rem;
     }
-    #position {
-      background: none;
+    .cutscene-text {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
       color: white;
-      box-shadow: none;
-      padding: 0;
-      max-width: none;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 1s ease;
+      z-index: 1000;
+      pointer-events: none;
     }
+    .cutscene-text.show {
+      opacity: 1;
+    }
+    .podium-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      gap: 1rem;
+      z-index: 10;
+    }
+    .podium {
+      width: 90px;
+      height: 110px;
+      opacity: 0.2;
+      mask-image: linear-gradient(to top, black 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
+      transition: opacity 1s ease, mask-image 1s ease, -webkit-mask-image 1s ease;
+    }
+    .podium.visible {
+      opacity: 1;
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+    .cutscene-space {
+      height: 100vh;
+      width: 100%;
+    }
+    #intro.cutscene-space { height: 0; }
   </style>
 </head>
 <body id="mainBody">
@@ -112,7 +143,7 @@
     <button class="tab-button" onclick="showTab('praxis2', event)">Praxis II</button>
   </div>
 
-  <div id="position" class="tab-content active">
+  <div id="position" class="tab-content active" style="background: none; color: white; box-shadow: none;">
     <div class="podium-container">
       <img id="soccerPodium" class="podium" src="soccer-podium.png" alt="Soccer Podium">
       <img id="tkdPodium" class="podium" src="tkd-podium.png" alt="TKD Podium">
@@ -154,36 +185,18 @@
   </div>
 
   <div id="praxis1" class="tab-content">
-    <div class="cutscene-text-tab">One Pager</div>
+    <h2>Praxis I</h2>
     <p><strong>Summary:</strong> Provide a clear and professional summary of your Praxis I project, including context, challenges, and outcomes.</p>
-    <div class="cutscene-text-tab">CTMF 1</div>
-    <p>Detail your critical takeaways and reflection 1 here.</p>
-    <div class="cutscene-text-tab">CTMF 2</div>
-    <p>Detail your critical takeaways and reflection 2 here.</p>
-    <div class="cutscene-text-tab">CTMF 3</div>
-    <p>Detail your critical takeaways and reflection 3 here.</p>
   </div>
 
   <div id="civ102" class="tab-content">
-    <div class="cutscene-text-tab">One Pager</div>
+    <h2>CIV102 Bridge</h2>
     <p><strong>Summary:</strong> Describe the CIV102 bridge project’s objectives, methodology, and final results, emphasizing your design decisions and teamwork.</p>
-    <div class="cutscene-text-tab">CTMF 1</div>
-    <p>Insight 1 from bridge project reflections.</p>
-    <div class="cutscene-text-tab">CTMF 2</div>
-    <p>Insight 2 from bridge project reflections.</p>
-    <div class="cutscene-text-tab">CTMF 3</div>
-    <p>Insight 3 from bridge project reflections.</p>
   </div>
 
   <div id="praxis2" class="tab-content">
-    <div class="cutscene-text-tab">One Pager</div>
+    <h2>Praxis II</h2>
     <p><strong>Summary:</strong> Outline your Praxis II design process, showcasing how your engineering thinking has matured and how it connects to your professional identity.</p>
-    <div class="cutscene-text-tab">CTMF 1</div>
-    <p>Praxis II reflection insight 1.</p>
-    <div class="cutscene-text-tab">CTMF 2</div>
-    <p>Praxis II reflection insight 2.</p>
-    <div class="cutscene-text-tab">CTMF 3</div>
-    <p>Praxis II reflection insight 3.</p>
   </div>
 
   <script>
