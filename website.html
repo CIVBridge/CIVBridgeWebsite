@@ -142,6 +142,27 @@
       height: 100vh;
       width: 100%;
     }
+    #backToTop {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 999;
+  transition: background 0.3s ease;
+}
+
+#backToTop:hover {
+  background-color: #1e40af;
+}
+
 
     .fade-section {
   opacity: 0;
@@ -395,7 +416,13 @@
   
   window.addEventListener('scroll', handleFadeSections);
   window.addEventListener('load', handleFadeSections);
-
+  document.getElementById("backToTop").addEventListener("click", () => {
+  const activeTab = document.querySelector(".tab-content.active");
+  if (activeTab) {
+    activeTab.scrollIntoView({ behavior: "smooth" });
+  }
+});
   </script>
+  <button id="backToTop" title="Back to Top">↑ Top</button>
 </body>
 </html>
