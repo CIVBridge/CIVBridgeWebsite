@@ -705,31 +705,36 @@
   event.target.classList.add('active');
 
   if (tabId === 'praxis2') {
+    body.style.backgroundImage = 'none';
     body.style.backgroundColor = '#375b43';
     header.style.background = 'linear-gradient(135deg, #225c2e, #3d8b4a, #5aa472)';
     backToTopBtn.style.backgroundColor = '#3d8b4a';
   } else if (tabId === 'praxis1') {
+    body.style.backgroundImage = 'none';
     body.style.backgroundColor = '#666699';
     header.style.background = 'linear-gradient(135deg, #443c73, #666699, #a5a5d6)';
     backToTopBtn.style.backgroundColor = '#443c73';
   } else if (tabId === 'civ102') {
+    body.style.backgroundImage = 'none';
     body.style.backgroundColor = '#c18a8a';
     header.style.background = 'linear-gradient(135deg, #844646, #c18a8a, #e6c0c0)';
     backToTopBtn.style.backgroundColor = '#844646';
   } else if (tabId === 'position') {
     lastPhase = '';
     window.dispatchEvent(new Event('scroll'));
-    body.style.backgroundImage = ''; // ⛔ Remove scroll-triggered background
+    // background image will be set dynamically during scroll
+    body.style.backgroundImage = '';
     header.style.background = 'linear-gradient(135deg, #1e3a8a, #2563eb, #60a5fa)';
     backToTopBtn.style.backgroundColor = '#2563eb';
-  }
-
   } else {
+    // default style for any new tabs
+    body.style.backgroundImage = 'none';
     body.style.backgroundColor = '#ffffff';
     header.style.background = 'linear-gradient(135deg, #1e3a8a, #2563eb, #60a5fa)';
     backToTopBtn.style.backgroundColor = '#2563eb';
   }
 }
+
 
 
 
