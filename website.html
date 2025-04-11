@@ -6,18 +6,16 @@
   <title>Engineering Design Portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f3f4f6;
-      color: #111827;
-      transition: background-image 1s ease-in-out;
+      background-color: #000;
+      color: #fff;
+      transition: background-image 1.5s ease-in-out;
       background-size: cover;
-      background-position: center;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: fixed;
     }
     header {
       background-color: rgba(31, 41, 55, 0.85);
@@ -52,29 +50,40 @@
     }
     .tab-content {
       display: none;
-      max-width: 1000px;
-      margin: 2rem auto;
-      background-color: rgba(255, 255, 255, 0.95);
-      border-radius: 1rem;
-      padding: 2rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      position: relative;
-      z-index: 2;
+      padding: 0;
+      margin: 0;
+      border: none;
+      background: none;
     }
-    .tab-content.active {
-      display: block;
+    .tab-content.active { display: block; }
+
+    h2.section-title {
+      font-size: 2rem;
+      color: white;
+      text-align: center;
+      margin: 4rem auto 2rem auto;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1s ease-out;
     }
-    .ctmf-placeholder {
-      background-color: #f9fafb;
-      border: 2px dashed #d1d5db;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      margin: 1rem 0;
-      color: #6b7280;
+    h2.section-title.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-section,
+    .intro-section,
+    .conclusion-section {
+      margin-bottom: 8rem;
+      scroll-margin-top: 100px;
       text-align: center;
     }
-    h2 {
-      margin-bottom: 1rem;
+    .scroll-section img,
+    .intro-section img,
+    .conclusion-section img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-top: 1rem;
     }
     .scroll-nav {
       position: fixed;
@@ -91,9 +100,7 @@
       opacity: 0.3;
       transition: opacity 0.3s ease;
     }
-    .scroll-nav img.completed {
-      opacity: 1;
-    }
+    .scroll-nav img.completed { opacity: 1; }
     .progress-track {
       position: fixed;
       top: 20%;
@@ -111,19 +118,16 @@
       background-color: #2563eb;
       height: 0%;
     }
-    .scroll-section,
-    .intro-section,
-    .conclusion-section {
-      margin-bottom: 8rem;
-      scroll-margin-top: 100px;
-      text-align: center;
-    }
-    .scroll-section img,
-    .intro-section img,
-    .conclusion-section img {
-      max-width: 100%;
-      border-radius: 12px;
-      margin-top: 1rem;
+    /* Dark overlay for cinematic effect */
+    .cutscene-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      pointer-events: none;
+      z-index: 1;
     }
   </style>
 </head>
@@ -217,6 +221,16 @@
       document.getElementById(tabId).classList.add('active');
       event.target.classList.add('active');
     }
+    function showTab(tabId) {
+      const contents = document.querySelectorAll('.tab-content');
+      const buttons = document.querySelectorAll('.tab-button');
+      contents.forEach((content) => content.classList.remove('active'));
+      buttons.forEach((btn) => btn.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    const sectionTitles = document.querySelectorAll('h2.section-title');
 
     window.addEventListener('scroll', () => {
       const scrollTop = window.scrollY;
@@ -225,26 +239,36 @@
       const scrollPercent = Math.min((scrollTop / (docHeight - windowHeight)) * 100, 100);
       document.getElementById('progressBar').style.height = scrollPercent + '%';
 
-      const soccerEnd = document.getElementById('tkd').offsetTop;
-      const tkdEnd = document.getElementById('robotics').offsetTop;
+      const scrollPos = window.scrollY + window.innerHeight / 2;
       const soccerStart = document.getElementById('soccer').offsetTop;
       const tkdStart = document.getElementById('tkd').offsetTop;
       const roboticsStart = document.getElementById('robotics').offsetTop;
 
-      const scrollPos = window.scrollY + window.innerHeight / 2;
-
       const body = document.getElementById('mainBody');
+      const overlay = document.querySelector('.cutscene-overlay');
 
       if (scrollPos >= roboticsStart) {
         body.style.backgroundImage = "url('robotics-background.jpg!w700wp')";
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
       } else if (scrollPos >= tkdStart) {
-        body.style.backgroundImage = "url('taekwondo-background.png')";
+        body.style.backgroundImage = "url('taekwondo-background.jpg')";
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
       } else if (scrollPos >= soccerStart) {
-        body.style.backgroundImage = "url('soccer-background.png')";
+        body.style.backgroundImage = "url('soccer-background.jpg')";
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
       } else {
         body.style.backgroundImage = "none";
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
       }
 
+      sectionTitles.forEach(title => {
+        const top = title.getBoundingClientRect().top;
+        const isVisible = top < window.innerHeight * 0.6;
+        title.classList.toggle('visible', isVisible);
+      });
+
+      const soccerEnd = document.getElementById('tkd').offsetTop;
+      const tkdEnd = document.getElementById('robotics').offsetTop;
       const pageBottom = window.scrollY + window.innerHeight;
       document.getElementById('soccerIcon').classList.toggle('completed', pageBottom > soccerEnd);
       document.getElementById('tkdIcon').classList.toggle('completed', pageBottom > tkdEnd);
