@@ -64,7 +64,7 @@
     }
     .scroll-section, .intro-section, .conclusion-section {
       max-width: 900px;
-      margin: 6rem auto;
+      margin: 3rem auto;
       padding: 1rem 2rem;
       text-align: center;
     }
@@ -76,14 +76,7 @@
       border-radius: 1rem;
     }
     .cutscene-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.4);
-      pointer-events: none;
-      z-index: 1;
+      display: none;
     }
     .cutscene-text {
       position: fixed;
@@ -141,6 +134,7 @@
       height: 100vh;
       width: 100%;
     }
+    #intro.cutscene-space { height: 0; }
   </style>
 </head>
 <body id="mainBody">
@@ -172,7 +166,6 @@
     <div class="cutscene-space" id="intro"></div>
 
     <div class="intro-section">
-      <h2>Intro</h2>
       <img src="intro1.png" alt="Intro Image 1" />
       <img src="intro2.png" alt="Intro Image 2" />
       <img src="intro3.png" alt="Intro Image 3" />
@@ -181,7 +174,6 @@
     <div class="cutscene-space" id="soccer"></div>
 
     <div class="scroll-section">
-      <h2>Soccer Phase</h2>
       <img src="soccerscene.png" alt="Soccer Experience" />
       <img src="soccersummary1.png" alt="Soccer Summary 1" />
       <img src="soccersummary2.png" alt="Soccer Summary 2" />
@@ -190,7 +182,6 @@
     <div class="cutscene-space" id="tkd"></div>
 
     <div class="scroll-section">
-      <h2>Taekwondo Phase</h2>
       <img src="taekwondoscene1.png" alt="Taekwondo Scene 1" />
       <img src="taekwondoscene2.png" alt="Taekwondo Scene 2" />
       <img src="taekwondosummary.png" alt="Taekwondo Summary" />
@@ -199,7 +190,6 @@
     <div class="cutscene-space" id="robotics"></div>
 
     <div class="scroll-section">
-      <h2>Robotics Phase</h2>
       <img src="roboticsscene.png" alt="Robotics Scene" />
       <img src="roboticssummary.png" alt="Robotics Summary" />
     </div>
@@ -207,7 +197,6 @@
     <div class="cutscene-space" id="conclusion"></div>
 
     <div class="scroll-section conclusion-section">
-      <h2>Conclusion</h2>
       <img src="conc1.png" alt="Conclusion 1" />
       <img src="conc2.png" alt="Conclusion 2" />
     </div>
