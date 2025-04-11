@@ -166,7 +166,7 @@
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
   font-weight: bold;
-  background-color: #2563eb;
+  background-color: #9ca3af;
   color: white;
   border: none;
   border-radius: 9999px;
@@ -186,7 +186,7 @@
 }
 
 #backToTop:hover {
-  background-color: #1e40af;
+  background-color: #6b7280;
 }
 
 
@@ -743,7 +743,7 @@
   });
 
   // Apply active button style based on tab
-  event.target.style.color = 'white';
+  event.target.style.color = 'black';
   if (tabId === 'praxis2') {
     body.style.backgroundImage = 'none';
     body.style.backgroundColor = '#375b43';
@@ -768,13 +768,15 @@
     body.style.backgroundImage = '';
     header.style.background = 'linear-gradient(135deg, #6b7280, #9ca3af, #d1d5db)';
     backToTopBtn.style.backgroundColor = '#2563eb';
-    event.target.style.backgroundColor = '#2563eb';
+    event.target.style.backgroundColor = '#9ca3af'; // match the gray active color
+
   } else {
     body.style.backgroundImage = 'none';
     body.style.backgroundColor = '#ffffff';
     header.style.background = 'linear-gradient(135deg, #6b7280, #9ca3af, #d1d5db)';
     backToTopBtn.style.backgroundColor = '#2563eb';
-    event.target.style.backgroundColor = '#2563eb';
+    event.target.style.backgroundColor = '#9ca3af'; // match the gray active color
+
   }
 }
 
