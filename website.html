@@ -71,6 +71,23 @@
     .tab-content.active {
       display: block;
     }
+
+    .image-row {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+    
+    .image-row img {
+      max-width: 100%;
+      max-height: 500px;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    
     .scroll-section, .intro-section, .conclusion-section {
       max-width: 900px;
       margin: 3rem auto;
@@ -252,13 +269,13 @@
 </div>
 
 
-  <div id="praxis2" class="tab-content">
-  <div class="section-container fade-section">
-    <h2>One Pager</h2>
-    <img src="Praxis2Pager1.png"/>
-    <img src="Praxis2Pager2.png"/>
+<div class="section-container fade-section">
+  <h2>One Pager</h2>
+  <div class="image-row">
+    <img src="Praxis2Pager1.png" alt="Praxis 2 Page 1" />
+    <img src="Praxis2Pager2.png" alt="Praxis 2 Page 2" />
   </div>
-
+  
   <div class="section-container fade-section">
     <h2>CTMF 1</h2>
     <p>Explain your first application of the CTMF model and how you began to navigate the design cycle.</p>
@@ -301,6 +318,8 @@
     let lastPhase = '';
 
     window.addEventListener('scroll', () => {
+      const activeTab = document.querySelector('.tab-content.active');
+      if (!activeTab || activeTab.id !== 'position') return; // ⛔ skip scroll effects if not on position
       const scrollTop = window.scrollY;
       const windowHeight = window.innerHeight;
       const scrollPos = scrollTop + windowHeight / 2;
