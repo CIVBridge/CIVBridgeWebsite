@@ -299,7 +299,7 @@
 </div>
 
 
-<div id="praxis2" class="tab-content" style="background-color: #375b43;">
+<div id="praxis2" class="tab-content">
   <div class="section-container fade-section">
     <h2>One Pager</h2>
     <div class="image-row">
@@ -362,13 +362,17 @@
     document.getElementById(tabId).classList.add('active');
     event.target.classList.add('active');
   
-    if (tabId !== 'position') {
-      body.style.backgroundImage = 'none';
-    } else {
-      // Reset to the current phase background
-      lastPhase = ''; // so the scroll handler resets the background
-      window.dispatchEvent(new Event('scroll')); // force scroll event to fire
-    }
+    if (tabId === 'praxis2') {
+  body.style.backgroundImage = 'none';
+  body.style.backgroundColor = '#e0f2f1'; // 🌈 Your desired outer background color here
+} else if (tabId === 'position') {
+  lastPhase = '';
+  window.dispatchEvent(new Event('scroll'));
+  body.style.backgroundColor = ''; // let cutscene handle it
+} else {
+  body.style.backgroundImage = 'none';
+  body.style.backgroundColor = '#ffffff'; // default for other tabs
+}
   }
 
 
