@@ -204,16 +204,14 @@
       <img src="roboticssummary.png" alt="Robotics Summary" />
     </div>
 
-    <div class="cutscene-space conclusion-section"></div>
+    <div class="cutscene-space" id="conclusion"></div>
 
-    <div class="scroll-section">
+    <div class="scroll-section conclusion-section">
       <h2>Conclusion</h2>
       <img src="conc1.png" alt="Conclusion 1" />
       <img src="conc2.png" alt="Conclusion 2" />
     </div>
   </div>
-
-  <!-- Other tab-content sections remain unchanged -->
 
   <script>
     function showTab(tabId) {
@@ -234,11 +232,11 @@
       const scrollPos = scrollTop + windowHeight / 2;
 
       const phases = [
-        { id: 'intro', label: 'Intro', background: 'none' },
+        { id: 'intro', label: 'Intro', background: "url('intro-background.png')" },
         { id: 'soccer', label: 'Soccer Phase', background: "url('soccer-background.png')" },
         { id: 'tkd', label: 'Taekwondo Phase', background: "url('taekwondo-background.png')" },
         { id: 'robotics', label: 'Robotics Phase', background: "url('robotics-background.jpg!w700wp')" },
-        { id: 'conclusion-section', label: 'Conclusion', background: 'none' },
+        { id: 'conclusion', label: 'Conclusion', background: "url('conclusion-background.png')" },
       ];
 
       const body = document.getElementById('mainBody');
