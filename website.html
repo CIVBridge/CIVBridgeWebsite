@@ -76,6 +76,7 @@
       flex-direction: column;
       align-items: center;
       gap: 1.5rem;
+      z-index: 10;
     }
     .scroll-nav img {
       width: 40px;
@@ -92,6 +93,7 @@
       width: 4px;
       height: 50vh;
       background-color: #e5e7eb;
+      z-index: 5;
     }
     .progress-bar {
       position: absolute;
@@ -101,12 +103,16 @@
       background-color: #2563eb;
       height: 0%;
     }
-    .scroll-section {
+    .scroll-section,
+    .intro-section,
+    .conclusion-section {
       margin-bottom: 8rem;
       scroll-margin-top: 100px;
       text-align: center;
     }
-    .scroll-section img {
+    .scroll-section img,
+    .intro-section img,
+    .conclusion-section img {
       max-width: 100%;
       border-radius: 12px;
       margin-top: 1rem;
@@ -135,41 +141,40 @@
       <img id="tkdIcon" src="https://cdn-icons-png.flaticon.com/512/685/685352.png" alt="Black Belt" />
       <img id="robotIcon" src="https://cdn-icons-png.flaticon.com/512/4712/4712103.png" alt="Robot" />
     </div>
-    <div>
+
+    <div class="intro-section">
       <h2>Intro</h2>
-      <img src="intro1.png"/>
-      <img src="intro2.png"/>
-      <img src="intro3.png"/>
+      <img src="intro1.png" alt="Intro Image 1" />
+      <img src="intro2.png" alt="Intro Image 2" />
+      <img src="intro3.png" alt="Intro Image 3" />
     </div>
 
     <div id="soccer" class="scroll-section">
       <h2>Soccer Phase</h2>
       <img src="soccerscene.png" alt="Soccer Experience" />
-      <img src="soccersummary1.png" alt="Soccer Experience" />
-      <img src="soccersummary2.png" alt="Soccer Experience" />
+      <img src="soccersummary1.png" alt="Soccer Summary 1" />
+      <img src="soccersummary2.png" alt="Soccer Summary 2" />
     </div>
 
     <div id="tkd" class="scroll-section">
       <h2>Taekwondo Phase</h2>
-      <img src="taekwondoscene1.png" alt="Taekwondo Experience" />
-      <img src="taekwondoscene2.png" alt="Taekwondo Experience" />
-      <img src="taekwondosummary.png" alt="Soccer Experience" />
+      <img src="taekwondoscene1.png" alt="Taekwondo Scene 1" />
+      <img src="taekwondoscene2.png" alt="Taekwondo Scene 2" />
+      <img src="taekwondosummary.png" alt="Taekwondo Summary" />
     </div>
 
     <div id="robotics" class="scroll-section">
       <h2>Robotics Phase</h2>
-      <img src="roboticsscene.png" alt="Robotics Experience" />
-      <img src="roboticssummary.png" alt="Soccer Experience" />
+      <img src="roboticsscene.png" alt="Robotics Scene" />
+      <img src="roboticssummary.png" alt="Robotics Summary" />
     </div>
 
-      
-    <div>
+    <div class="conclusion-section">
       <h2>Conclusion</h2>
-      <img src="conc1.png"/>
-      <img src="conc2.png"/>
+      <img src="conc1.png" alt="Conclusion 1" />
+      <img src="conc2.png" alt="Conclusion 2" />
     </div>
   </div>
-
 
   <div id="praxis1" class="tab-content">
     <h2>Praxis I</h2>
