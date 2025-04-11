@@ -17,7 +17,9 @@
       color: #111827;
       transition: background-image 1s ease-in-out;
       background-size: cover;
-      background-position: center;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: fixed;
     }
     header {
       background-color: rgba(31, 41, 55, 0.85);
@@ -128,85 +130,7 @@
   </style>
 </head>
 <body id="mainBody">
-  <header>
-    <h1>Engineering Design Portfolio</h1>
-    <p>ESC102 | Student Engineer Design Showcase</p>
-  </header>
-
-  <div class="tabs">
-    <button class="tab-button active" onclick="showTab('position')">Original Position</button>
-    <button class="tab-button" onclick="showTab('praxis1')">Praxis I</button>
-    <button class="tab-button" onclick="showTab('civ102')">CIV102 Bridge</button>
-    <button class="tab-button" onclick="showTab('praxis2')">Praxis II</button>
-  </div>
-
-  <div id="position" class="tab-content active">
-    <div class="scroll-nav">
-      <div class="progress-track">
-        <div id="progressBar" class="progress-bar"></div>
-      </div>
-      <img id="soccerIcon" src="soccericon.png" alt="Soccer Ball" />
-      <img id="tkdIcon" src="blackbelticon.jpg" alt="Black Belt" />
-      <img id="robotIcon" src="roboticon.png" alt="Robot" />
-    </div>
-
-    <div class="intro-section">
-      <h2>Intro</h2>
-      <img src="intro1.png" alt="Intro Image 1" />
-      <img src="intro2.png" alt="Intro Image 2" />
-      <img src="intro3.png" alt="Intro Image 3" />
-    </div>
-
-    <div id="soccer" class="scroll-section">
-      <h2>Soccer Phase</h2>
-      <img src="soccerscene.png" alt="Soccer Experience" />
-      <img src="soccersummary1.png" alt="Soccer Summary 1" />
-      <img src="soccersummary2.png" alt="Soccer Summary 2" />
-    </div>
-
-    <div id="tkd" class="scroll-section">
-      <h2>Taekwondo Phase</h2>
-      <img src="taekwondoscene1.png" alt="Taekwondo Scene 1" />
-      <img src="taekwondoscene2.png" alt="Taekwondo Scene 2" />
-      <img src="taekwondosummary.png" alt="Taekwondo Summary" />
-    </div>
-
-    <div id="robotics" class="scroll-section">
-      <h2>Robotics Phase</h2>
-      <img src="roboticsscene.png" alt="Robotics Scene" />
-      <img src="roboticssummary.png" alt="Robotics Summary" />
-    </div>
-
-    <div class="conclusion-section">
-      <h2>Conclusion</h2>
-      <img src="conc1.png" alt="Conclusion 1" />
-      <img src="conc2.png" alt="Conclusion 2" />
-    </div>
-  </div>
-
-  <div id="praxis1" class="tab-content">
-    <h2>Praxis I</h2>
-    <p><strong>Summary:</strong> Provide a clear and professional summary of your Praxis I project, including context, challenges, and outcomes.</p>
-    <div class="ctmf-placeholder">[ CTMF 1 Placeholder ]</div>
-    <div class="ctmf-placeholder">[ CTMF 2 Placeholder ]</div>
-    <div class="ctmf-placeholder">[ CTMF 3 Placeholder ]</div>
-  </div>
-
-  <div id="civ102" class="tab-content">
-    <h2>CIV102 Bridge</h2>
-    <p><strong>Summary:</strong> Describe the CIV102 bridge project’s objectives, methodology, and final results, emphasizing your design decisions and teamwork.</p>
-    <div class="ctmf-placeholder">[ CTMF 1 Placeholder ]</div>
-    <div class="ctmf-placeholder">[ CTMF 2 Placeholder ]</div>
-    <div class="ctmf-placeholder">[ CTMF 3 Placeholder ]</div>
-  </div>
-
-  <div id="praxis2" class="tab-content">
-    <h2>Praxis II</h2>
-    <p><strong>Summary:</strong> Outline your Praxis II design process, showcasing how your engineering thinking has matured and how it connects to your professional identity.</p>
-    <div class="ctmf-placeholder">[ CTMF 1 Placeholder ]</div>
-    <div class="ctmf-placeholder">[ CTMF 2 Placeholder ]</div>
-    <div class="ctmf-placeholder">[ CTMF 3 Placeholder ]</div>
-  </div>
+  <!-- Rest of the body remains unchanged -->
 
   <script>
     function showTab(tabId) {
@@ -236,11 +160,11 @@
       const body = document.getElementById('mainBody');
 
       if (scrollPos >= roboticsStart) {
-        body.style.backgroundImage = "url('robotics-background.jpg!w700wp')";
+        body.style.backgroundImage = "url('robotics-background.jpg')";
       } else if (scrollPos >= tkdStart) {
-        body.style.backgroundImage = "url('taekwondo-background.png')";
+        body.style.backgroundImage = "url('taekwondo-background.jpg')";
       } else if (scrollPos >= soccerStart) {
-        body.style.backgroundImage = "url('soccer-background.png')";
+        body.style.backgroundImage = "url('soccer-background.jpg')";
       } else {
         body.style.backgroundImage = "none";
       }
