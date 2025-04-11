@@ -75,9 +75,6 @@
       margin: 1rem 0;
       border-radius: 1rem;
     }
-    .cutscene-overlay {
-      display: none;
-    }
     .cutscene-text {
       position: fixed;
       top: 40%;
@@ -94,41 +91,26 @@
     .cutscene-text.show {
       opacity: 1;
     }
-    .scroll-nav {
+    .podium-container {
       position: fixed;
-      top: 30%;
-      left: 1rem;
+      bottom: 2rem;
+      right: 2rem;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
+      gap: 1rem;
       z-index: 10;
     }
-    .scroll-nav img {
-      width: 40px;
-      height: 40px;
-      opacity: 0.3;
-      transition: opacity 0.3s ease;
+    .podium {
+      width: 60px;
+      height: 80px;
+      opacity: 0.2;
+      mask-image: linear-gradient(to top, black 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
+      transition: opacity 1s ease, mask-image 1s ease, -webkit-mask-image 1s ease;
     }
-    .scroll-nav img.completed {
+    .podium.visible {
       opacity: 1;
-    }
-    .progress-track {
-      position: fixed;
-      top: 20%;
-      left: 2rem;
-      width: 4px;
-      height: 50vh;
-      background-color: #e5e7eb;
-      z-index: 5;
-    }
-    .progress-bar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      background-color: #2563eb;
-      height: 0%;
+      mask-image: none;
+      -webkit-mask-image: none;
     }
     .cutscene-space {
       height: 100vh;
@@ -138,7 +120,6 @@
   </style>
 </head>
 <body id="mainBody">
-  <div class="cutscene-overlay"></div>
   <div id="cutsceneLabel" class="cutscene-text"></div>
 
   <header>
@@ -154,17 +135,13 @@
   </div>
 
   <div id="position" class="tab-content active" style="background: none; color: white; box-shadow: none;">
-    <div class="scroll-nav">
-      <div class="progress-track">
-        <div id="progressBar" class="progress-bar"></div>
-      </div>
-      <img id="soccerIcon" src="soccericon.png" alt="Soccer Ball" />
-      <img id="tkdIcon" src="blackbelticon.jpg" alt="Black Belt" />
-      <img id="robotIcon" src="roboticon.png" alt="Robot" />
+    <div class="podium-container">
+      <img id="soccerPodium" class="podium" src="soccer-podium.png" alt="Soccer Podium">
+      <img id="tkdPodium" class="podium" src="tkd-podium.png" alt="TKD Podium">
+      <img id="robotPodium" class="podium" src="robotics-podium.png" alt="Robot Podium">
     </div>
 
     <div class="cutscene-space" id="intro"></div>
-
     <div class="intro-section">
       <img src="intro1.png" alt="Intro Image 1" />
       <img src="intro2.png" alt="Intro Image 2" />
@@ -172,7 +149,6 @@
     </div>
 
     <div class="cutscene-space" id="soccer"></div>
-
     <div class="scroll-section">
       <img src="soccerscene.png" alt="Soccer Experience" />
       <img src="soccersummary1.png" alt="Soccer Summary 1" />
@@ -180,7 +156,6 @@
     </div>
 
     <div class="cutscene-space" id="tkd"></div>
-
     <div class="scroll-section">
       <img src="taekwondoscene1.png" alt="Taekwondo Scene 1" />
       <img src="taekwondoscene2.png" alt="Taekwondo Scene 2" />
@@ -188,14 +163,12 @@
     </div>
 
     <div class="cutscene-space" id="robotics"></div>
-
     <div class="scroll-section">
       <img src="roboticsscene.png" alt="Robotics Scene" />
       <img src="roboticssummary.png" alt="Robotics Summary" />
     </div>
 
     <div class="cutscene-space" id="conclusion"></div>
-
     <div class="scroll-section conclusion-section">
       <img src="conc1.png" alt="Conclusion 1" />
       <img src="conc2.png" alt="Conclusion 2" />
@@ -220,18 +193,18 @@
       const windowHeight = window.innerHeight;
       const scrollPos = scrollTop + windowHeight / 2;
 
+      const body = document.getElementById('mainBody');
+
       const phases = [
         { id: 'intro', label: 'Intro', background: "url('intro-background.png')" },
-        { id: 'soccer', label: 'Soccer Phase', background: "url('soccer-background.png')" },
-        { id: 'tkd', label: 'Taekwondo Phase', background: "url('taekwondo-background.png')" },
-        { id: 'robotics', label: 'Robotics Phase', background: "url('robotics-background.jpg!w700wp')" },
+        { id: 'soccer', label: 'Soccer Phase', background: "url('soccer-background.png')", podiumId: 'soccerPodium' },
+        { id: 'tkd', label: 'Taekwondo Phase', background: "url('taekwondo-background.png')", podiumId: 'tkdPodium' },
+        { id: 'robotics', label: 'Robotics Phase', background: "url('robotics-background.jpg!w700wp')", podiumId: 'robotPodium' },
         { id: 'conclusion', label: 'Conclusion', background: "url('conclusion-background.png')" },
       ];
 
-      const body = document.getElementById('mainBody');
-
       for (let phase of phases.reverse()) {
-        const elem = document.getElementById(phase.id) || document.querySelector(`.${phase.id}`);
+        const elem = document.getElementById(phase.id);
         if (elem && scrollPos >= elem.offsetTop) {
           if (lastPhase !== phase.label) {
             cutsceneLabel.textContent = phase.label;
@@ -239,6 +212,9 @@
             setTimeout(() => cutsceneLabel.classList.remove('show'), 2000);
             body.style.backgroundImage = phase.background;
             lastPhase = phase.label;
+          }
+          if (phase.podiumId) {
+            document.getElementById(phase.podiumId).classList.add('visible');
           }
           break;
         }
