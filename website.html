@@ -416,7 +416,11 @@
   
   window.addEventListener('scroll', handleFadeSections);
   window.addEventListener('load', handleFadeSections);
+  window.addEventListener("load", () => {
   document.getElementById("backToTop").addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+});
   const activeTab = document.querySelector(".tab-content.active");
   if (activeTab) {
     activeTab.scrollIntoView({ behavior: "smooth" });
