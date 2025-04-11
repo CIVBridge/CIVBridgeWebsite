@@ -1,0 +1,73 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  font-family: 'Inter', sans-serif;
+  background-color: #000;
+  color: #fff;
+  transition: background 1.5s ease-in-out;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+header {
+  background: linear-gradient(to right, #1e3a8a, #2563eb);
+  padding: 2rem;
+  text-align: center;
+  color: white;
+  z-index: 100;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  z-index: 100;
+  position: relative;
+}
+.tab-button {
+  background-color: #e5e7eb;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.tab-button.active,
+.tab-button:hover {
+  background-color: #2563eb;
+  color: white;
+}
+.white-tab {
+  background-color: white;
+  color: black;
+  padding: 3rem 2rem;
+  max-width: 1000px;
+  margin: auto;
+}
+.white-tab h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin: 3rem 0 1rem;
+}
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.fade-in-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
