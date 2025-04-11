@@ -152,11 +152,20 @@
   background-color: #2563eb;
   color: white;
   border: none;
-  border-radius: 0.75rem;
+  border-radius: 9999px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   z-index: 999;
-  transition: background 0.3s ease;
+  transition: opacity 0.4s ease, transform 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+}
+
+#backToTop.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 #backToTop:hover {
@@ -417,15 +426,26 @@
   window.addEventListener('scroll', handleFadeSections);
   window.addEventListener('load', handleFadeSections);
   window.addEventListener("load", () => {
-  document.getElementById("backToTop").addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const backToTopBtn = document.getElementById("backToTop");
+
+  backToTopBtn.addEventListener("click", () => {
+    const activeTab = document.querySelector(".tab-content.active");
+    if (activeTab) {
+      const offset = activeTab.getBoundingClientRect().top + window.pageYOffset - 20; // adjust offset if needed
+      window.scrollTo({ top: offset, behavior: "smooth" });
+    }
+  });
+
+  // Show/hide button on scroll
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      backToTopBtn.classList.add("show");
+    } else {
+      backToTopBtn.classList.remove("show");
+    }
   });
 });
-  const activeTab = document.querySelector(".tab-content.active");
-  if (activeTab) {
-    activeTab.scrollIntoView({ behavior: "smooth" });
-  }
-});
+
   </script>
 </body>
 </html>
