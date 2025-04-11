@@ -57,68 +57,6 @@
     }
     .tab-content.active { display: block; }
 
-    h2.section-title {
-      font-size: 2rem;
-      color: white;
-      text-align: center;
-      margin: 4rem auto 2rem auto;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 1s ease-out;
-    }
-    h2.section-title.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .scroll-section,
-    .intro-section,
-    .conclusion-section {
-      margin-bottom: 8rem;
-      scroll-margin-top: 100px;
-      text-align: center;
-    }
-    .scroll-section img,
-    .intro-section img,
-    .conclusion-section img {
-      max-width: 100%;
-      border-radius: 12px;
-      margin-top: 1rem;
-    }
-    .scroll-nav {
-      position: fixed;
-      top: 30%;
-      left: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-      z-index: 10;
-    }
-    .scroll-nav img {
-      width: 40px;
-      opacity: 0.3;
-      transition: opacity 0.3s ease;
-    }
-    .scroll-nav img.completed { opacity: 1; }
-    .progress-track {
-      position: fixed;
-      top: 20%;
-      left: 3rem;
-      width: 4px;
-      height: 50vh;
-      background-color: #e5e7eb;
-      z-index: 5;
-    }
-    .progress-bar {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      background-color: #2563eb;
-      height: 0%;
-    }
-    /* Dark overlay for cinematic effect */
     .cutscene-overlay {
       position: fixed;
       top: 0;
@@ -129,9 +67,27 @@
       pointer-events: none;
       z-index: 1;
     }
+    .cutscene-text {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      color: white;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 1s ease;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .cutscene-text.show {
+      opacity: 1;
+    }
   </style>
 </head>
 <body id="mainBody">
+  <div class="cutscene-overlay"></div>
+  <div id="cutsceneLabel" class="cutscene-text"></div>
   <header>
     <h1>Engineering Design Portfolio</h1>
     <p>ESC102 | Student Engineer Design Showcase</p>
@@ -221,58 +177,60 @@
       document.getElementById(tabId).classList.add('active');
       event.target.classList.add('active');
     }
-    function showTab(tabId) {
-      const contents = document.querySelectorAll('.tab-content');
-      const buttons = document.querySelectorAll('.tab-button');
-      contents.forEach((content) => content.classList.remove('active'));
-      buttons.forEach((btn) => btn.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      event.target.classList.add('active');
-    }
 
     const sectionTitles = document.querySelectorAll('h2.section-title');
+    const cutsceneLabel = document.getElementById('cutsceneLabel');
+
+    let lastPhase = '';
+
 
     window.addEventListener('scroll', () => {
       const scrollTop = window.scrollY;
-      const docHeight = document.getElementById('position').offsetHeight;
+      const docHeight = document.getElementById('position')?.offsetHeight || 1;
       const windowHeight = window.innerHeight;
       const scrollPercent = Math.min((scrollTop / (docHeight - windowHeight)) * 100, 100);
-      document.getElementById('progressBar').style.height = scrollPercent + '%';
 
-      const scrollPos = window.scrollY + window.innerHeight / 2;
-      const soccerStart = document.getElementById('soccer').offsetTop;
-      const tkdStart = document.getElementById('tkd').offsetTop;
-      const roboticsStart = document.getElementById('robotics').offsetTop;
+      const scrollPos = scrollTop + windowHeight / 2;
+      const soccerStart = document.getElementById('soccer')?.offsetTop || 0;
+      const tkdStart = document.getElementById('tkd')?.offsetTop || 0;
+      const roboticsStart = document.getElementById('robotics')?.offsetTop || 0;
+      const conclusionStart = document.querySelector('.conclusion-section')?.offsetTop || 0;
 
       const body = document.getElementById('mainBody');
       const overlay = document.querySelector('.cutscene-overlay');
 
-      if (scrollPos >= roboticsStart) {
-        body.style.backgroundImage = "url('robotics-background.jpg!w700wp')";
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+      let currentPhase = '';
+
+      if (scrollPos >= conclusionStart) {
+        body.style.backgroundImage = "url('conclusion-background.jpg')";
+        currentPhase = 'Conclusion';
+      } else if (scrollPos >= roboticsStart) {
+        body.style.backgroundImage = "url('robotics-background.jpg')";
+        currentPhase = 'Robotics Phase';
       } else if (scrollPos >= tkdStart) {
         body.style.backgroundImage = "url('taekwondo-background.jpg')";
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+        currentPhase = 'Taekwondo Phase';
       } else if (scrollPos >= soccerStart) {
-        body.style.backgroundImage = "url('soccer-background.png')";
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+        body.style.backgroundImage = "url('soccer-background.jpg')";
+        currentPhase = 'Soccer Phase';
       } else {
         body.style.backgroundImage = "none";
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        currentPhase = '';
       }
 
-      sectionTitles.forEach(title => {
-        const top = title.getBoundingClientRect().top;
-        const isVisible = top < window.innerHeight * 0.6;
-        title.classList.toggle('visible', isVisible);
-      });
+      if (currentPhase !== lastPhase && currentPhase !== '') {
+        cutsceneLabel.textContent = currentPhase;
+        cutsceneLabel.classList.add('show');
+        setTimeout(() => cutsceneLabel.classList.remove('show'), 2000);
+        lastPhase = currentPhase;
+      }
 
-      const soccerEnd = document.getElementById('tkd').offsetTop;
-      const tkdEnd = document.getElementById('robotics').offsetTop;
-      const pageBottom = window.scrollY + window.innerHeight;
-      document.getElementById('soccerIcon').classList.toggle('completed', pageBottom > soccerEnd);
-      document.getElementById('tkdIcon').classList.toggle('completed', pageBottom > tkdEnd);
-      document.getElementById('robotIcon').classList.toggle('completed', scrollPercent >= 99);
+      const soccerEnd = document.getElementById('tkd')?.offsetTop || 0;
+      const tkdEnd = document.getElementById('robotics')?.offsetTop || 0;
+      const pageBottom = scrollTop + windowHeight;
+      document.getElementById('soccerIcon')?.classList.toggle('completed', pageBottom > soccerEnd);
+      document.getElementById('tkdIcon')?.classList.toggle('completed', pageBottom > tkdEnd);
+      document.getElementById('robotIcon')?.classList.toggle('completed', scrollPercent >= 99);
     });
   </script>
 </body>
