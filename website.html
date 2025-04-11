@@ -621,35 +621,39 @@
   <h2>CTMF 1: Framing through Primary Research</h2>
 
   <p>
-    Our team began the Praxis II design process by actively engaging with the <strong>Toronto Bonsai Society</strong> to conduct <strong>primary research</strong> and understand the real needs of the bonsai community. This early interaction provided invaluable framing insights, especially around the needs of <strong>beginner bonsai enthusiasts</strong>—a demographic that stakeholders identified as needing the most support in plant care and moisture monitoring.
+    To begin our design process with a user-centered lens, our team prioritized **primary research** as a way to meaningfully frame the problem space. We engaged with the <strong>Toronto Bonsai Society</strong> and conducted stakeholder conversations to better understand the real challenges faced by bonsai caretakers. One key insight emerged clearly: <strong>beginners are the ones who need the most help</strong>. Experienced hobbyists already have watering routines and visual intuition. But newcomers are often overwhelmed, unsure of when to water, and hesitant to disturb the soil or roots.
   </p>
 
   <p>
-    Through our conversation with stakeholders, we learned that many new bonsai caretakers often struggle with overwatering or underwatering due to uncertainty and lack of intuitive feedback. As a result, we reframed our user group to focus specifically on <strong>novice users</strong>, shifting our design priorities to match their learning curve and usability needs. This reframing directly influenced our engineering requirements.
+    This interaction reframed our original perspective. We initially considered designing for general use, but these conversations emphasized the need for **clarity, simplicity, and confidence** in our output. As a result, we added a new requirement to our design specification: the system must display moisture values in **increments of at least 10%**. This step-size constraint came directly from beginner feedback. They didn't need decimal precision — they needed <em>actionable guidance</em> that felt trustworthy and easy to interpret.
   </p>
 
-  <p>
-    One key outcome of this framing shift was the addition of a brand-new requirement: our design must <strong>minimize the number of steps</strong> the user needs to take to assess soil moisture. The aim was to improve overall usability and encourage continued engagement with the system, especially for users who might feel intimidated by traditional tools.
-  </p>
-
-  <div style="text-align: center; margin: 2rem 0;">
-    <img src="requirement_steps.png" alt="New Requirement: Minimize Steps" style="max-width: 100%; height: auto; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);" />
-    <figcaption style="margin-top: 0.5rem; font-size: 0.9rem; color: #555;">
-      <strong>Figure 1:</strong> Requirement added based on community feedback: Minimize steps to improve usability for beginner users.
+  <figure style="text-align: center;">
+    <img src="requirement_steps.png" alt="Requirement Specification: 10% Moisture Increments" style="max-width: 100%; height: auto; border-radius: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top: 1.5rem;" />
+    <figcaption style="margin-top: 0.5rem; font-size: 0.95rem; color: #555;">
+      Figure – Requirement added from community input: Moisture must be displayed in minimum increments of 10%.
     </figcaption>
-  </div>
+  </figure>
 
-  <div style="border: 3px solid orange; border-radius: 1rem; padding: 1.5rem; margin: 2rem 0; background-color: #fff8f0;">
-    <p style="font-size: 1.25rem; font-weight: 600; color: #444; text-align: center;">
+  <div style="border: 3px solid orange; padding: 1.5rem; margin-top: 2rem; border-radius: 0.75rem; background-color: #fff7eb;">
+    <p style="font-size: 1.25rem; color: #333; margin: 0;">
       “Beginners often use (and kill) Junipers, which require more water than some expect, but also don’t want to be soaked” - Josh, Head of Toronto Bonsai Society
     </p>
   </div>
 
-  <p>
-    This quote encapsulated our user-centered framing approach. By letting community voices drive the conversation, we were able to ground our technical goals in real-world insights. Rather than designing for the average user, we prioritized accessibility, simplicity, and beginner empowerment—reframing the problem not as one of moisture detection alone, but of user experience in plant care.
+  <p style="margin-top: 2rem;">
+    This stakeholder-driven framing helped us shift from thinking about sensors and data to thinking about <strong>user comprehension and confidence</strong>. Instead of focusing on granular accuracy or app complexity, we began asking: “Would a first-time user know what to do after reading the result?” This led to simplified UI decisions, fewer interactive steps, and clearer visual indicators.
   </p>
 
-  <p><em>Effectiveness:</em> This CTMF was highly effective because it redefined our target audience and expanded the problem space to include usability barriers. The primary research deepened our empathy for users, leading to better design decisions throughout the development cycle.</p>
+  <p>
+    This CTMF was particularly effective because it anchored our framing in **real human behavior**. While technical research might have led us to pursue more advanced sensing techniques, stakeholder input helped us filter features through a lens of <strong>practical value and psychological ease</strong>. We weren't just designing a measurement tool — we were designing a way to help users trust their care routines and enjoy the experience of growing a bonsai.
+  </p>
+
+  <p>
+    In the end, our early framing through primary research influenced everything that followed: our UI wireframes, our threshold values, our data calibration logic, and even our final evaluation criteria. It reminded us that **framing isn’t just a phase — it’s a compass**, and this CTMF gave us a direction grounded in empathy, simplicity, and purpose.
+  </p>
+
+  <p><em>Effectiveness:</em> This CTMF was highly effective because it directly connected us to our end users, gave us actionable insights to reshape our requirements, and grounded our technical decisions in user-centered values. It provided a foundation for the rest of the design cycle and ensured we were solving the right problem, in the right way, for the right people.</p>
 </div>
 
 
