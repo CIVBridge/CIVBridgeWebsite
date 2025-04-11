@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
+    html, body {
       font-family: 'Inter', sans-serif;
       background-color: #000;
       color: #fff;
@@ -16,14 +16,15 @@
       background-repeat: no-repeat;
       background-position: center center;
       background-attachment: fixed;
+      overflow-x: hidden;
     }
     header {
       background-color: rgba(31, 41, 55, 0.85);
       padding: 2rem;
       text-align: center;
       color: white;
+      z-index: 100;
       position: relative;
-      z-index: 2;
     }
     .tabs {
       display: flex;
@@ -31,8 +32,8 @@
       margin-top: 2rem;
       gap: 1rem;
       flex-wrap: wrap;
+      z-index: 100;
       position: relative;
-      z-index: 2;
     }
     .tab-button {
       background-color: #e5e7eb;
@@ -50,13 +51,30 @@
     }
     .tab-content {
       display: none;
-      padding: 0;
-      margin: 0;
-      border: none;
-      background: none;
+      max-width: 1000px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background-color: white;
+      color: black;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    .tab-content.active { display: block; }
-
+    .tab-content.active {
+      display: block;
+    }
+    .scroll-section, .intro-section, .conclusion-section {
+      max-width: 900px;
+      margin: 6rem auto;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    .scroll-section img,
+    .intro-section img,
+    .conclusion-section img {
+      max-width: 100%;
+      margin: 1rem 0;
+      border-radius: 1rem;
+    }
     .cutscene-overlay {
       position: fixed;
       top: 0;
@@ -83,11 +101,52 @@
     .cutscene-text.show {
       opacity: 1;
     }
+    .scroll-nav {
+      position: fixed;
+      top: 30%;
+      left: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      z-index: 10;
+    }
+    .scroll-nav img {
+      width: 40px;
+      height: 40px;
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+    .scroll-nav img.completed {
+      opacity: 1;
+    }
+    .progress-track {
+      position: fixed;
+      top: 20%;
+      left: 2rem;
+      width: 4px;
+      height: 50vh;
+      background-color: #e5e7eb;
+      z-index: 5;
+    }
+    .progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      background-color: #2563eb;
+      height: 0%;
+    }
+    .cutscene-space {
+      height: 100vh;
+      width: 100%;
+    }
   </style>
 </head>
 <body id="mainBody">
   <div class="cutscene-overlay"></div>
   <div id="cutsceneLabel" class="cutscene-text"></div>
+
   <header>
     <h1>Engineering Design Portfolio</h1>
     <p>ESC102 | Student Engineer Design Showcase</p>
@@ -100,7 +159,7 @@
     <button class="tab-button" onclick="showTab('praxis2')">Praxis II</button>
   </div>
 
-  <div id="position" class="tab-content active">
+  <div id="position" class="tab-content active" style="background: none; color: white; box-shadow: none;">
     <div class="scroll-nav">
       <div class="progress-track">
         <div id="progressBar" class="progress-bar"></div>
@@ -117,27 +176,35 @@
       <img src="intro3.png" alt="Intro Image 3" />
     </div>
 
-    <div id="soccer" class="scroll-section">
+    <div class="cutscene-space" id="soccer"></div>
+
+    <div class="scroll-section">
       <h2>Soccer Phase</h2>
       <img src="soccerscene.png" alt="Soccer Experience" />
       <img src="soccersummary1.png" alt="Soccer Summary 1" />
       <img src="soccersummary2.png" alt="Soccer Summary 2" />
     </div>
 
-    <div id="tkd" class="scroll-section">
+    <div class="cutscene-space" id="tkd"></div>
+
+    <div class="scroll-section">
       <h2>Taekwondo Phase</h2>
       <img src="taekwondoscene1.png" alt="Taekwondo Scene 1" />
       <img src="taekwondoscene2.png" alt="Taekwondo Scene 2" />
       <img src="taekwondosummary.png" alt="Taekwondo Summary" />
     </div>
 
-    <div id="robotics" class="scroll-section">
+    <div class="cutscene-space" id="robotics"></div>
+
+    <div class="scroll-section">
       <h2>Robotics Phase</h2>
       <img src="roboticsscene.png" alt="Robotics Scene" />
       <img src="roboticssummary.png" alt="Robotics Summary" />
     </div>
 
-    <div class="conclusion-section">
+    <div class="cutscene-space conclusion-section"></div>
+
+    <div class="scroll-section">
       <h2>Conclusion</h2>
       <img src="conc1.png" alt="Conclusion 1" />
       <img src="conc2.png" alt="Conclusion 2" />
@@ -178,17 +245,15 @@
       event.target.classList.add('active');
     }
 
-    const sectionTitles = document.querySelectorAll('h2.section-title');
     const cutsceneLabel = document.getElementById('cutsceneLabel');
-
     let lastPhase = '';
-
 
     window.addEventListener('scroll', () => {
       const scrollTop = window.scrollY;
       const docHeight = document.getElementById('position')?.offsetHeight || 1;
       const windowHeight = window.innerHeight;
       const scrollPercent = Math.min((scrollTop / (docHeight - windowHeight)) * 100, 100);
+      document.getElementById('progressBar').style.height = scrollPercent + '%';
 
       const scrollPos = scrollTop + windowHeight / 2;
       const soccerStart = document.getElementById('soccer')?.offsetTop || 0;
@@ -198,7 +263,6 @@
 
       const body = document.getElementById('mainBody');
       const overlay = document.querySelector('.cutscene-overlay');
-
       let currentPhase = '';
 
       if (scrollPos >= conclusionStart) {
